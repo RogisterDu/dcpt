@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import './index.less';
-import request from 'umi-request';
+import { login } from './services';
 import { getToken, setToken } from '@/utils/token';
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [loginForm] = Form.useForm();
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish = async (values: any) => {
+    // console.log('Success:', values);
     setLoading(true);
-    request('/dcpt/user/login', {
-      method: 'POST',
-      data: {
-        ...values,
-      },
-    }).then((res) => {
-      if (res.code) {
-        setToken(res.data.token);
-        window.location.href = '/';
-      }
-    });
+    const { data, success } = await login(values);
+    if (success) {
+      setToken(data.token);
+      window.location.href = '/';
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
