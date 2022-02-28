@@ -1,6 +1,7 @@
-const getToken = () => {
-  return localStorage.getItem('token');
-};
+export function getToken(): any {
+  const token = localStorage && localStorage.getItem('token');
+  return token;
+}
 
 const removeToken = () => {
   localStorage.removeItem('token');
