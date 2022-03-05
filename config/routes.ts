@@ -1,4 +1,6 @@
-﻿export default [
+﻿import { Redirect } from 'umi';
+
+export default [
   {
     path: '/user',
     layout: false,
@@ -19,10 +21,23 @@
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
+    path: '/center',
+    name: '门诊中心',
     icon: 'smile',
-    component: './Welcome',
+    routes: [
+      {
+        path: '/center/home',
+        name: '首页',
+        icon: 'smile',
+        component: './Home',
+      },
+      {
+        path: '/center/visitLog',
+        name: '来访日志',
+        icon: 'smile',
+        component: './visitLog',
+      },
+    ],
   },
   {
     path: '/admin',
@@ -50,7 +65,11 @@
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/center/home',
+  },
+  {
+    path: '/center',
+    redirect: '/center/home',
   },
   {
     component: './404',
