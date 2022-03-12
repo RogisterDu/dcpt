@@ -1,0 +1,84 @@
+.listSearchWrapper {
+  position: relative;
+  min-width: 856px;
+  min-height: 80px; // 一行都没有，只显示按钮区域
+  margin-bottom: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #fff;
+  .formItem {
+    display: flex;
+    flex: 1;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 386px;
+    max-width: 484px;
+    padding-right: 12px;
+    padding-bottom: 24px;
+  }
+  .emptyFormItem {
+    height: 0;
+    padding: 0;
+  }
+  .inputRangeWrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    .inputDivide {
+      width: 14px;
+      height: 14px;
+      overflow: hidden;
+      line-height: 14px;
+      text-align: center;
+    }
+    .rangeInput {
+      flex: 1;
+      max-width: 163px;
+    }
+  }
+  .searchBtnArea {
+    position: absolute;
+    right: 172px;
+    bottom: 24px;
+    text-align: right;
+    .toSearch {
+      margin-right: 16px;
+    }
+    .toReset {
+      margin-right: 10px;
+    }
+  }
+}
+// 查询表单只展示一行
+.listSearchFromUp {
+  max-height: 136px;
+  padding: 24px 164px 56px 16px;
+  .formWrapper {
+    height: 56px;
+    overflow: hidden;
+  }
+}
+// 查询表单完整展示
+.listSearchFormDown {
+  max-height: 278px; //四行 56*4+24
+  padding: 24px 164px 0 16px;
+}
+.listTableWrapper {
+  min-height: 399px;
+  padding: 16px 16px 0 16px;
+  overflow: hidden;
+  background: #fff;
+  // .tableArea {
+  //   padding-top: 16px;
+  // }
+}
+
+//公共样式
+.btnCommon {
+  width: 62px;
+  height: 32px;
+  overflow: hidden;
+}

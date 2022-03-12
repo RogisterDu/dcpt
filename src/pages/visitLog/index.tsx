@@ -1,6 +1,14 @@
 import React from 'react';
 import './index.less';
+import SearchForm from '@/pages/components/SearchForm';
+import { visitSearchConfig } from './data';
 const visitLog: React.FC = () => {
-  return <div>visitLog</div>;
+  const toSearch = () => {};
+  const toReset = () => {};
+  return (
+    <div>
+      <SearchForm searchFormConfig={visitSearchConfig} ResetForm={toReset} toSearch={toSearch} />
+    </div>
+  );
 };
 export default visitLog;
