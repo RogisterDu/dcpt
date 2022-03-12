@@ -40,7 +40,7 @@ const TableList: React.FC<Iprops> = (props) => {
       // 需要将数据处理成需要的格式
       const data = res?.data?.dataList || [];
       if (Array.isArray(data)) {
-        const totalPage = res?.data?.total;
+        const totalPage = res?.data?.total || 0;
         setTotal(totalPage);
         setTableData(data);
       }
@@ -79,8 +79,6 @@ const TableList: React.FC<Iprops> = (props) => {
     switch (item.renderType) {
       case 'dateTime':
         return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : '-';
-      case 'tagText':
-        return '-';
       default:
         return value || '-';
     }
@@ -127,7 +125,7 @@ const TableList: React.FC<Iprops> = (props) => {
           },
         }}
         rowSelection={tableRowSelection()}
-      ></Table>
+      />
     </>
   );
 };

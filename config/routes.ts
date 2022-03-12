@@ -14,7 +14,7 @@ export default [
     routes: [
       { path: '/center', redirect: '/center/home' },
       { path: '/center/home', name: '首页', icon: 'smile', component: './Home' },
-      { path: '/center/visitLog', name: '来访日志', icon: 'smile', component: './visitLog' },
+      { path: '/center/visitLog', name: '来访日志', icon: 'smile', component: './VisitLog' },
     ],
   },
   {
