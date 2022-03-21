@@ -1,5 +1,9 @@
 export default [
   {
+    path: '/',
+    redirect: '/center/home',
+  },
+  {
     path: '/user',
     layout: false,
     routes: [

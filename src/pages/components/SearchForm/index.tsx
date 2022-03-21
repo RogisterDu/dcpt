@@ -7,7 +7,7 @@
  */
 import React, { useCallback, useState } from 'react';
 import { Button, Input, Form, Select, DatePicker } from 'antd';
-import styles from './Search.less';
+import styles from './search.less';
 import './coverAntd.less';
 
 interface searchProps {
@@ -15,7 +15,7 @@ interface searchProps {
   name: string;
   itemType: string;
   itemProps: Record<string, string | number | boolean>;
-  // searchInfo?: { api: string; paramsName?: string; label?: string; value?: string };
+  searchInfo?: { api: string; paramsName?: string; label?: string; value?: string };
 }
 
 const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: any }> = ({
@@ -53,11 +53,7 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: 
             name={itemConfig.name}
             key={itemConfig.name}
           >
-            <Select
-              {...itemConfig.itemProps}
-              className="common-multiple-select"
-              key={itemConfig.name}
-            />
+            <Select {...itemConfig.itemProps} className="common-multiple-select" />
           </Form.Item>
         );
       case 'dateRange': //下单时间
@@ -77,13 +73,15 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: 
               separator={<span>~</span>}
               className="common-date-select"
               dropdownClassName="common-date-drop"
-              key={itemConfig.name}
             />
           </Form.Item>
         );
       //撑开宽度
       case 'occupiedItem1':
       case 'occupiedItem2':
+        return <div />;
+      //撑开高度用
+      case 'occupiedItem3':
         return <div />;
       default:
         return (
@@ -94,7 +92,16 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: 
             key={itemConfig.name}
             getValueFromEvent={(e) => e.target.value.trim()}
           >
-            <Input {...(itemConfig?.itemProps || {})} key={itemConfig.name} />
+            <Input
+              {...(itemConfig?.itemProps || {})}
+              // onBlur={() => {
+              //   if (orderSearchForm?.getFieldValue(itemConfig.name)?.trim()) {
+              //     orderSearchForm.setFieldsValue({
+              //       [itemConfig.name]: orderSearchForm.getFieldValue(itemConfig.name).trim(),
+              //     });
+              //   }
+              // }}
+            />
           </Form.Item>
         );
     }
@@ -102,7 +109,7 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: 
   return (
     <div
       className={
-        !collapsedStatus
+        collapsedStatus
           ? `${styles.listSearchWrapper} list-search-cover-antd ${styles.listSearchFromUp} list-search-cover-antd`
           : `${styles.listSearchWrapper} list-search-cover-antd ${styles.listSearchFormDown}`
       }
@@ -140,6 +147,9 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: 
         </Button>
         <a className="handleCollapsed" onClick={changeCollapsedStatus} key="to-handle">
           <span style={{ marginRight: '4px' }}>{collapsedStatus ? '展开' : '收起'}</span>
+          {/* <CRMIconFont
+            type={collapsedStatus ? 'icon-zhankaishouqichangtai' : 'icon-xialaicon_jihuo_lanse'}
+          /> */}
         </a>
       </div>
     </div>

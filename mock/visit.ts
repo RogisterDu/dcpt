@@ -30,5 +30,5 @@ const visitList = (req: Request, res: Response) => {
   });
 };
 export default {
-  'GET /dcpt/visitList': visitList,
+  'POST /dcpt/visitList': visitList,
 };

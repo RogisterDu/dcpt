@@ -14,6 +14,10 @@ const VisitLog: React.FC = () => {
 
   const toReset = () => {};
 
+  const changeSelect = (value: any) => {
+    console.log(value);
+  };
+
   return (
     <div>
       <SearchForm searchFormConfig={visitSearchConfig} ResetForm={toReset} toSearch={toSearch} />
@@ -22,7 +26,12 @@ const VisitLog: React.FC = () => {
           <Button type="primary">导出</Button>
         </div>
         <div className={styles.tableArea}>
-          <TableList values={values} tableColumns={visitTableColumns} api={'/dcpt/visitList'} />
+          <TableList
+            values={values}
+            tableColumns={visitTableColumns}
+            api={'/dcpt/visitList'}
+            rowSelection={() => changeSelect}
+          />
         </div>
       </div>
     </div>

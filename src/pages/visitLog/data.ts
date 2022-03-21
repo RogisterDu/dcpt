@@ -25,10 +25,22 @@ export const visitSearchConfig = [
     },
   },
   {
-    name: 'occupiedItem1',
+    name: 'address',
+    label: '居住地址',
+    itemType: 'Input',
+    itemProps: {
+      placeholder: '请选择居住区域',
+    },
   },
   {
+    label: '',
+    name: 'occupiedItem1',
+    placeholder: '',
+  },
+  {
+    label: '',
     name: 'occupiedItem2',
+    placeholder: '',
   },
 ];
 

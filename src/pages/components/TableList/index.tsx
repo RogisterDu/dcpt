@@ -30,7 +30,7 @@ const TableList: React.FC<Iprops> = (props) => {
     const pageSize = pageInfo?.pageSize || COMMON_DEFAULT_PAGESIZE;
 
     request(api, {
-      method: 'GET',
+      method: 'POST',
       params: {
         ...values,
         pageNo,
