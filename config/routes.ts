@@ -7,8 +7,19 @@ export default [
     path: '/user',
     layout: false,
     routes: [
-      { path: '/user', routes: [{ name: '登录', path: '/user/login', component: './user/Login' }] },
-      { component: './404' },
+      {
+        path: '/user',
+        routes: [
+          {
+            name: '登录',
+            path: '/user/login',
+            component: './user/Login',
+          },
+        ],
+      },
+      {
+        component: './404',
+      },
     ],
   },
   {
@@ -16,9 +27,28 @@ export default [
     name: '门诊中心',
     icon: 'smile',
     routes: [
-      { path: '/center', redirect: '/center/home' },
-      { path: '/center/home', name: '首页', icon: 'smile', component: './Home' },
-      { path: '/center/visitLog', name: '来访日志', icon: 'smile', component: './VisitLog' },
+      {
+        path: '/center',
+        redirect: '/center/home',
+      },
+      {
+        path: '/center/home',
+        name: '首页',
+        icon: 'smile',
+        component: './Home',
+      },
+      {
+        path: '/center/visitLog',
+        name: '来访日志',
+        icon: 'smile',
+        component: './VisitLog',
+      },
+      {
+        path: '/center/exportTask',
+        name: '导出任务',
+        icon: 'smile',
+        component: './ExportTask',
+      },
     ],
   },
   {
@@ -28,11 +58,15 @@ export default [
     access: 'canAdmin',
     component: './Admin',
     routes: [
-      { path: '/admin/sub-page', name: '二级管理页', icon: 'smile', component: './Welcome' },
-      { component: './404' },
+      {
+        path: '/admin/sub-page',
+        name: '二级管理页',
+        icon: 'smile',
+        component: './Welcome',
+      },
+      {
+        component: './404',
+      },
     ],
   },
-  // { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
-  // { path: '/', redirect: '/center/home' },
-  // { component: './404' },
 ];

@@ -15,7 +15,7 @@ interface searchProps {
   name: string;
   itemType: string;
   itemProps: Record<string, string | number | boolean>;
-  searchInfo?: { api: string; paramsName?: string; label?: string; value?: string };
+  // searchInfo?: { api: string; paramsName?: string; label?: string; value?: string };
 }
 
 const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: any }> = ({
@@ -109,7 +109,7 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: 
   return (
     <div
       className={
-        collapsedStatus
+        !collapsedStatus
           ? `${styles.listSearchWrapper} list-search-cover-antd ${styles.listSearchFromUp} list-search-cover-antd`
           : `${styles.listSearchWrapper} list-search-cover-antd ${styles.listSearchFormDown}`
       }

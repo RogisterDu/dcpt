@@ -84,4 +84,13 @@ export const visitTableColumns = [
     dataIndex: 'isHighRisk',
     key: 'isHighRisk',
   },
+  {
+    title: '操作',
+    dataIndex: 'operation',
+    align: 'right',
+    fixed: 'right',
+    renderType: 'action',
+    className: 'action-area',
+    SLOT: 'actionRender',
+  },
 ];

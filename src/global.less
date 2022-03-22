@@ -67,3 +67,58 @@ ol {
     }
   }
 }
+
+.common-table {
+  .ant-table,
+  .ant-spin-nested-loading {
+    .ant-spin-container {
+      .ant-pagination {
+        margin-top: 24px;
+        .ant-pagination-total-text {
+          display: flex;
+          align-items: center;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 22px;
+        }
+      }
+    }
+  }
+  .ant-table-empty {
+    .ant-table-tbody {
+      height: 280px;
+    }
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
+    }
+  }
+  .ant-table-thead > tr > th {
+    height: 46px;
+    padding: 12px 8px;
+    font-size: 14px;
+    line-height: 22px;
+    background: #f5f7fc;
+  }
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td,
+  .ant-table tfoot > tr > th,
+  .ant-table tfoot > tr > td {
+    padding: 12px 8px;
+    line-height: 22px;
+  }
+
+  .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody > tr:not(.ant-table-placeholder) > td:first-child,
+  .ant-table tfoot > tr > th:first-child,
+  .ant-table tfoot > tr > td:first-child {
+    padding-left: 18px;
+  }
+
+  .ant-table-tbody > tr > .client-tag-area {
+    padding: 0 12px;
+  }
+  .ant-table-cell.action-area {
+    padding-right: 18px;
+    text-align: right;
+  }
+}
