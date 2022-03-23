@@ -4,6 +4,7 @@ import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+import theme from './theme';
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -28,6 +29,7 @@ export default defineConfig({
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
     'root-entry-name': 'variable',
+    ...theme,
   },
   // esbuild is father build tools
   // https://umijs.org/plugins/plugin-esbuild
