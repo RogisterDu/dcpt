@@ -32,16 +32,6 @@ export const visitSearchConfig = [
       placeholder: '请选择居住区域',
     },
   },
-  {
-    label: '',
-    name: 'occupiedItem1',
-    placeholder: '',
-  },
-  {
-    label: '',
-    name: 'occupiedItem2',
-    placeholder: '',
-  },
 ];
 
 export const visitTableColumns = [

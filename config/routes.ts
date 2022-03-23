@@ -43,20 +43,14 @@ export default [
         icon: 'smile',
         component: './VisitLog',
       },
-      // {
-      //   path: '/center/exportTask',
-      //   name: '导出任务',
-      //   icon: 'smile',
-      //   component: './ExportTask',
-      // },
       {
-        path: '/cener/patient',
-        name: '病人管理',
+        path: '/center/patient',
+        name: '病人列表',
         icon: 'smile',
         component: './PatientManage',
       },
       {
-        path: '/center/exportTask2',
+        path: '/center/exportTask',
         name: '导出任务',
         icon: 'smile',
         component: './StoreList',

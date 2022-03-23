@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './index.less';
+// import SearchForm from '@/pages/components/SearchForm';
 import SearchForm from '@/pages/components/SearchForm';
 import TableList from '@/pages/components/TableList';
 import { visitSearchConfig, visitTableColumns } from './data';
@@ -44,7 +45,7 @@ const VisitLog: React.FC = () => {
 
   return (
     <div>
-      <SearchForm searchFormConfig={visitSearchConfig} ResetForm={toReset} toSearch={toSearch} />
+      <SearchForm searchFormConfig={visitSearchConfig} resetForm={toReset} searchForm={toSearch} />
       <div className={styles.searchArea}>
         <div className={styles.actionArea}>
           <Button type="primary" onClick={() => handletoExport}>

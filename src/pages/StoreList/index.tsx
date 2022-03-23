@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import SearchForm from './components/SearchForm';
+// import SearchForm from './components/SearchForm';
+import SearchForm from '@/pages/components/SearchForm';
 import TableList from './components/TableList';
 import { searchFormConfig } from './layoutData';
 import styles from './index.less';
-// import { queryTaskList } from '@/services/task';
-// import moment from 'moment';
 
 const StoreList: React.FC = () => {
   const [values, setFormValues] = useState<any>({});

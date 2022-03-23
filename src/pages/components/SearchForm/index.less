@@ -1,3 +1,19 @@
+.categoryContent {
+  width: 100%;
+  height: 100%;
+  padding: 24px 16px 112px 16px;
+  background-color: #fff;
+  .categoryBlock {
+    display: flex;
+    // border: 1px solid @split-bar-color;
+    .commontTable {
+      flex: 1;
+      // margin: 0px 16px;
+      overflow: auto;
+    }
+  }
+  // display: flex;
+}
 .listSearchWrapper {
   position: relative;
   min-width: 856px;
@@ -16,10 +32,6 @@
     max-width: 484px;
     padding-right: 12px;
     padding-bottom: 24px;
-  }
-  .emptyFormItem {
-    height: 0;
-    padding: 0;
   }
   .inputRangeWrapper {
     display: flex;
@@ -41,39 +53,51 @@
   }
   .searchBtnArea {
     position: absolute;
-    right: 172px;
+    right: 0;
     bottom: 24px;
     text-align: right;
     .toSearch {
       margin-right: 16px;
     }
     .toReset {
-      margin-right: 10px;
+      margin-right: 16px;
     }
+    .handleCollapsed {
+      margin-right: 16px;
+    }
+  }
+  .showCollaps {
+    bottom: 24px;
+  }
+  .noCollaps {
+    bottom: 0;
   }
 }
 // 查询表单只展示一行
 .listSearchFromUp {
   max-height: 136px;
-  padding: 24px 164px 56px 16px;
+  padding: 24px 160px 0 16px;
   .formWrapper {
     height: 56px;
     overflow: hidden;
   }
 }
+.hasCollaps {
+  padding-right: 222px;
+}
 // 查询表单完整展示
 .listSearchFormDown {
-  max-height: 278px; //四行 56*4+24
-  padding: 24px 164px 0 16px;
+  max-height: 248px; //四行 56*4+24
+  padding: 24px 222px 0 16px;
 }
 .listTableWrapper {
   min-height: 399px;
   padding: 16px 16px 0 16px;
   overflow: hidden;
   background: #fff;
-  // .tableArea {
-  //   padding-top: 16px;
-  // }
+  .tableArea {
+    padding-top: 16px;
+  }
 }
 
 //公共样式
@@ -81,4 +105,13 @@
   width: 62px;
   height: 32px;
   overflow: hidden;
+}
+
+.disabledDownload {
+  margin: 0;
+  color: rgba(10, 24, 36, 0.15);
+  font-weight: 400;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  line-height: 22px;
 }

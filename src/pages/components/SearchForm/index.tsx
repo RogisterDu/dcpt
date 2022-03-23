@@ -3,155 +3,158 @@
  * @Author: jdchen
  * @Date: 2021-11-25 14:46:07
  * @LastEditors: jdchen
- * @LastEditTime: 2022-02-24 09:47:23
+ * @LastEditTime: 2021-11-25 18:48:44
  */
-import React, { useCallback, useState } from 'react';
-import { Button, Input, Form, Select, DatePicker } from 'antd';
-import styles from './search.less';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Button, Form, Input, Select, DatePicker } from 'antd';
+import styles from './index.less';
 import './coverAntd.less';
 
-interface searchProps {
-  label: string;
-  name: string;
-  itemType: string;
-  itemProps: Record<string, string | number | boolean>;
-  // searchInfo?: { api: string; paramsName?: string; label?: string; value?: string };
-}
+const { RangePicker } = DatePicker;
 
-const SearchForm: React.FC<{ searchFormConfig: any[]; ResetForm: any; toSearch: any }> = ({
+const SearchForm: React.FC<{ searchFormConfig: any[]; resetForm: any; searchForm: any }> = ({
   searchFormConfig,
-  ResetForm,
-  toSearch,
+  resetForm,
+  searchForm,
 }) => {
-  const { RangePicker } = DatePicker;
-  const [orderSearchForm] = Form.useForm(); // 定义表单实例
-  const [collapsedStatus, setCollapsedStatus] = useState(true); // 展开收起的状态
+  const [TotalSearchForm] = Form.useForm(); // 定义表单实例
+  // const [values, setFormValues] = useState({})
+  const [collapsedStatus, setCollapsedStatus] = useState(true);
+  const [showSearchCollaps, setShowSearchCollaps] = useState<boolean>(false);
+  // console.log(props)
+  // 渲染查询表单的表单项
+  const renderFormItem = (itemConfig: any) => {
+    switch (itemConfig.itemType) {
+      case 'Input':
+        return <Input {...itemConfig.itemProps} />;
+      case 'InputRange':
+        return (
+          <div className={styles.inputRangeWrapper}>
+            <Form.Item noStyle name={`${itemConfig.name}Start`}>
+              <Input {...itemConfig.itemProps} className={styles.rangeInput} />
+            </Form.Item>
+            <div className={styles.inputDivide}>~</div>
+            <Form.Item noStyle name={`${itemConfig.name}End`}>
+              <Input {...itemConfig.itemProps} className={styles.rangeInput} />
+            </Form.Item>
+          </div>
+        );
+      case 'select':
+        return <Select {...itemConfig.itemProps} />;
+      case 'dateRange':
+        return (
+          <RangePicker
+            placeholder={[itemConfig.itemProps.placeholder1, itemConfig.itemProps.placeholder2]}
+            allowEmpty={[false, false]}
+            separator={<span>~</span>}
+            className="common-date-select"
+            dropdownClassName="common-date-drop"
+          />
+        );
+      default:
+        return <div />;
+    }
+  };
+
+  const toResetForm = useCallback(() => {
+    TotalSearchForm.resetFields();
+    resetForm();
+  }, [TotalSearchForm, resetForm]);
+
+  // 查询列表数据
+  const toSearch = () => {
+    const formValues = TotalSearchForm.getFieldsValue();
+    console.log('1111', formValues);
+    const { finshed, ...rest } = formValues;
+    if (finshed) {
+      rest.finishDatetimeStart = finshed[0].format('YYYY-MM-DD');
+      rest.finishDatetimeEnd = finshed[1].format('YYYY-MM-DD');
+    }
+    // console.log('2222', rest);
+    searchForm(rest);
+    // setFormValues(formValues)
+    // searchForm(formValues);
+  };
+
   const changeCollapsedStatus = useCallback(() => {
     setCollapsedStatus(!collapsedStatus);
   }, [collapsedStatus]);
-  const toResetForm = useCallback(() => {
-    orderSearchForm.resetFields();
-    ResetForm();
-  }, [ResetForm, orderSearchForm]);
-
-  const onClick_Search = useCallback(() => {
-    const { makeOrder, ...rest } = orderSearchForm.getFieldsValue();
-    if (makeOrder) {
-      rest.makeOrderAtStart = makeOrder[0].format('YYYY-MM-DD');
-      rest.makeOrderAtEnd = makeOrder[1].format('YYYY-MM-DD');
-    }
-    toSearch(rest);
-  }, [toSearch, orderSearchForm]);
-  // 渲染查询表单的表单项
-  const renderFormItem = (itemConfig: searchProps): React.ReactNode => {
-    switch (itemConfig.itemType) {
-      case 'select':
-        return (
-          <Form.Item
-            className={styles.formItem}
-            label={itemConfig.label}
-            name={itemConfig.name}
-            key={itemConfig.name}
-          >
-            <Select {...itemConfig.itemProps} className="common-multiple-select" />
-          </Form.Item>
-        );
-      case 'dateRange': //下单时间
-        return (
-          <Form.Item
-            className={styles.formItem}
-            label={itemConfig.label}
-            name={itemConfig.name}
-            key={itemConfig.name}
-          >
-            <RangePicker
-              placeholder={[
-                itemConfig.itemProps.placeholder1 as string,
-                itemConfig.itemProps.placeholder2 as string,
-              ]}
-              allowEmpty={[false, false]}
-              separator={<span>~</span>}
-              className="common-date-select"
-              dropdownClassName="common-date-drop"
-            />
-          </Form.Item>
-        );
-      //撑开宽度
-      case 'occupiedItem1':
-      case 'occupiedItem2':
-        return <div />;
-      //撑开高度用
-      case 'occupiedItem3':
-        return <div />;
-      default:
-        return (
-          <Form.Item
-            className={styles.formItem}
-            label={itemConfig.label}
-            name={itemConfig.name}
-            key={itemConfig.name}
-            getValueFromEvent={(e) => e.target.value.trim()}
-          >
-            <Input
-              {...(itemConfig?.itemProps || {})}
-              // onBlur={() => {
-              //   if (orderSearchForm?.getFieldValue(itemConfig.name)?.trim()) {
-              //     orderSearchForm.setFieldsValue({
-              //       [itemConfig.name]: orderSearchForm.getFieldValue(itemConfig.name).trim(),
-              //     });
-              //   }
-              // }}
-            />
-          </Form.Item>
-        );
-    }
+  const handleResize = () => {
+    setShowSearchCollaps(window.innerWidth < 1588);
   };
+
+  useEffect(() => {
+    // 监听
+    window.addEventListener('resize', handleResize);
+    // 销毁
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  useEffect(() => {
+    handleResize();
+  }, []);
   return (
     <div
-      className={
-        !collapsedStatus
-          ? `${styles.listSearchWrapper} list-search-cover-antd ${styles.listSearchFromUp} list-search-cover-antd`
-          : `${styles.listSearchWrapper} list-search-cover-antd ${styles.listSearchFormDown}`
-      }
+      className={[
+        styles.listSearchWrapper,
+        'list-search-cover-antd',
+        collapsedStatus ? styles.listSearchFromUp : styles.listSearchFormDown,
+        showSearchCollaps ? styles.hasCollaps : '',
+      ].join(' ')}
     >
       <Form
         className={styles.formWrapper}
-        name="orderSearchForm"
+        name="TotalSearchForm"
         autoComplete="off"
-        form={orderSearchForm}
+        form={TotalSearchForm}
       >
-        {(searchFormConfig as searchProps[]).map((item) => {
-          if (item.name.includes('occupiedItem')) {
+        {searchFormConfig.map((item) => {
+          if (item.itemType === 'empty') {
             // 空的填充元素
-            return <div className={`${styles.formItem} ${styles.emptyFormItem}`} key={item.name} />;
+            return <div className={styles.formItem} key={item.name} />;
           }
-          return <>{renderFormItem(item)}</>;
+          return (
+            <Form.Item
+              className={styles.formItem}
+              label={item.label}
+              name={item.name}
+              key={item.name}
+            >
+              {renderFormItem(item)}
+            </Form.Item>
+          );
         })}
+        {<div className={styles.formItem} key={'empty'} />}
+
+        <div
+          className={[styles.searchBtnArea, showSearchCollaps ? 'showCollaps' : 'noCollaps'].join(
+            ' ',
+          )}
+        >
+          {/* <div className={styles.searchBtnArea}> */}
+          <Button
+            type="primary"
+            onClick={toSearch}
+            className={`${styles.btnCommon} ${styles.toSearch}`}
+          >
+            查询
+          </Button>
+          <Button
+            type="default"
+            onClick={toResetForm}
+            className={`${styles.btnCommon} ${styles.toReset}`}
+          >
+            重置
+          </Button>
+          {showSearchCollaps && (
+            <a className={styles.handleCollapsed} onClick={changeCollapsedStatus}>
+              <span style={{ marginRight: '4px' }}>{collapsedStatus ? '展开' : '收起'}</span>
+              {/* <CRMIconFont
+                type={collapsedStatus ? 'icon-zhankaishouqichangtai' : 'icon-xialaicon_jihuo_lanse'}
+              /> */}
+            </a>
+          )}
+        </div>
       </Form>
-      <div className={styles.searchBtnArea}>
-        <Button
-          key="to-search"
-          type="primary"
-          onClick={onClick_Search}
-          className={`${styles.btnCommon} ${styles.toSearch}`}
-        >
-          查询
-        </Button>
-        <Button
-          key="to-reset"
-          type="default"
-          onClick={toResetForm}
-          className={`${styles.btnCommon} ${styles.toReset}`}
-        >
-          重置
-        </Button>
-        <a className="handleCollapsed" onClick={changeCollapsedStatus} key="to-handle">
-          <span style={{ marginRight: '4px' }}>{collapsedStatus ? '展开' : '收起'}</span>
-          {/* <CRMIconFont
-            type={collapsedStatus ? 'icon-zhankaishouqichangtai' : 'icon-xialaicon_jihuo_lanse'}
-          /> */}
-        </a>
-      </div>
     </div>
   );
 };
