@@ -64,16 +64,7 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; resetForm: any; searchForm
   // 查询列表数据
   const toSearch = () => {
     const formValues = TotalSearchForm.getFieldsValue();
-    console.log('1111', formValues);
-    const { finshed, ...rest } = formValues;
-    if (finshed) {
-      rest.finishDatetimeStart = finshed[0].format('YYYY-MM-DD');
-      rest.finishDatetimeEnd = finshed[1].format('YYYY-MM-DD');
-    }
-    // console.log('2222', rest);
-    searchForm(rest);
-    // setFormValues(formValues)
-    // searchForm(formValues);
+    searchForm(formValues);
   };
 
   const changeCollapsedStatus = useCallback(() => {
