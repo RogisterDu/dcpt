@@ -40,7 +40,7 @@ export default [
       {
         path: '/center/visitLog',
         name: '来访日志',
-        icon: 'smile',
+        icon: 'BookOutlined',
         component: './VisitLog',
       },
       {
