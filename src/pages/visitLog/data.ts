@@ -84,3 +84,81 @@ export const visitTableColumns = [
     SLOT: 'actionRender',
   },
 ];
+
+export const visitLogFormItems = [
+  {
+    name: 'name',
+    label: '姓名',
+    itemType: 'Input',
+    rules: [
+      {
+        required: true,
+        message: '请输入姓名',
+      },
+      {
+        whitespace: true,
+        message: '姓名不能为空',
+      },
+    ],
+    itemProps: {
+      placeholder: '请输入姓名',
+    },
+  },
+  {
+    name: 'phone',
+    label: '手机号',
+    itemType: 'Input',
+    rules: [
+      {
+        required: true,
+        message: '请输入手机号',
+      },
+      {
+        pattern: /^1(3\d|4[5-9]|5[0-35-9]|6[2567]|7[0-8]|8\d|9[0-35-9])\d{8}$/,
+        message: '手机号格式有误',
+      },
+    ],
+    itemProps: {
+      placeholder: '请输入手机号',
+    },
+  },
+  {
+    name: 'temperature',
+    label: '体温',
+    itemType: 'Number',
+    rules: [
+      {
+        required: true,
+        message: '请输入体温',
+      },
+    ],
+    itemProps: {
+      placeholder: '请输入体温',
+      min: 0,
+    },
+  },
+  {
+    name: 'greenCode',
+    label: '健康码',
+    rules: [
+      {
+        required: true,
+        message: '请选择健康码状态',
+      },
+    ],
+    itemType: 'Select',
+    itemProps: {
+      placeholder: '请选择健康码状态',
+      options: [
+        {
+          label: '是',
+          value: '1',
+        },
+        {
+          label: '否',
+          value: '0',
+        },
+      ],
+    },
+  },
+];

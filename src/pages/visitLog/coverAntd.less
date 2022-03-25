@@ -1,0 +1,41 @@
+/*
+ * @Author: yquanmei
+ * @Date: 2022-01-11 11:06:18
+ * @Last Modified by: yquanmei
+ * @Last Modified time: 2022-02-16 13:16:29
+ */
+// .ant-select-item-option:hover {
+//   background-color: @primary-color;
+// }
+
+/* 表单样式 */
+@media (max-width: 575px) {
+  .s-system {
+    .ant-form .ant-form-item .ant-form-item-label {
+      flex: none;
+    }
+
+    .ant-form .ant-form-item .ant-form-item-control,
+    .ant-form-horizontal .ant-form-item-control {
+      flex: 1 1;
+    }
+  }
+}
+
+/* 弹框样式 */
+.s-modal {
+  .ant-form-item-label {
+    width: 90px;
+  }
+
+  textarea.ant-input {
+    height: 70px;
+  }
+
+  .ant-input[disabled] {
+    // color: @back;
+    color: @normal-text-color;
+    background: none;
+    border: 0;
+  }
+}
