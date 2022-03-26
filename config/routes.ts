@@ -48,6 +48,11 @@ export default [
         name: '病人列表',
         icon: 'smile',
         component: './PatientManage',
+        // routes: [{
+        //   path: '/center/patientInfo',
+        //   name: '病人信息',
+        //   component: './PatientManage/Info/[id$].tsx',
+        // }]
       },
       {
         path: '/center/exportTask',
