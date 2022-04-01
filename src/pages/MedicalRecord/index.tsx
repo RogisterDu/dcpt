@@ -36,7 +36,24 @@ const MedicalRecord: React.FC<MedicalRecordProps> = ({ medicalRecord }) => {
         main: '牙疼',
         now: '无',
         cure: '治疗方案',
-        location: '无',
+        epidemic: '流行病',
+        advice: '医嘱',
+        check: [
+          {
+            location1: '1',
+            location2: '2',
+            location3: '3',
+            location4: '4',
+            content: '检查记录',
+          },
+          {
+            location1: '1',
+            location2: '2',
+            location3: '3',
+            location4: '4',
+            content: '检查记录',
+          },
+        ],
       },
     },
     {

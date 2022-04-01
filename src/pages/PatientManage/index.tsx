@@ -4,6 +4,7 @@ import { Tabs, Spin } from 'antd';
 import styles from './index.less';
 import Info from './Info';
 import MedicalRecord from '@/pages/MedicalRecord';
+import ChargeRecord from '../ChargeRecord';
 
 const { TabPane } = Tabs;
 
@@ -11,6 +12,7 @@ const PatientManage: React.FC = () => {
   const [patientId, setPatientId] = useState('');
   const [patientInfo, setPatientInfo] = useState([]); //患者信息数据
   const [medicalRecord, setMedicalRecord] = useState([]); //患者电子病例数据
+  const [chargeRecord, setChargeRecord] = useState([]); //患者收费记录数据
   const [tabkey, setTabkey] = useState('1');
   const [loading, setLoading] = useState(false);
   const changePatientId = (Id: string) => {
@@ -28,6 +30,7 @@ const PatientManage: React.FC = () => {
       setLoading(true);
       setPatientInfo([]);
       setMedicalRecord([]);
+      setChargeRecord([]);
       setLoading(false);
     }
   }, [patientId]);
@@ -55,13 +58,13 @@ const PatientManage: React.FC = () => {
           className={`${styles.tabsRender}`}
         >
           <TabPane tab="个人信息" key="1" className={styles.tabContent}>
-            <Info patientInfo={patientInfo} />
+            {!patientId && <Info patientInfo={patientInfo} />}
           </TabPane>
           <TabPane tab="电子病例" key="2">
-            <MedicalRecord medicalRecord={medicalRecord} />
+            {!patientId && <MedicalRecord medicalRecord={medicalRecord} />}
           </TabPane>
           <TabPane tab="收费记录" key="3">
-            Content of Tab Pane 3
+            {!patientId && <ChargeRecord chargeRecord={chargeRecord} />}
           </TabPane>
           <TabPane tab="医学影像" key="4">
             Content of Tab Pane 3
