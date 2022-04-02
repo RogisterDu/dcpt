@@ -24,6 +24,7 @@ type DataSourceType = {
   chargeItem: string;
   quantity: number;
   unitPrice: number;
+  unit: string;
   totalPrice: number;
 };
 
@@ -75,6 +76,20 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
   const toShowCharge = () => {
     console.log('chargeItem', chargeItem);
     setChargeModal(true);
+
+    //calculate each item total price
+    const temp = chargeDetail.map((item: any) => {
+      return {
+        code: item.code,
+        chargeItem: item.chargeItem,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        unit: item.unit,
+        totalPrice: item.quantity * item.unitPrice,
+      };
+    });
+    console.log('temp', temp);
+    setTempChargeList(temp);
   };
 
   const renderCardExtra = (id: any) => {
@@ -88,6 +103,8 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
 
   const toAddNewDetail = () => {
     console.log('toAddNewDetail');
+    setChargeModal(true);
+    setTempChargeList([]);
   };
 
   const justToSave = () => {
@@ -134,10 +151,13 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
         ...tempChargeList,
         { ...record, quantity: 1, totalPrice: record.unitPrice },
       ]);
+      tempChargeForm.setFieldsValue({
+        [record.code]: 1,
+      });
     } else {
       //update the quantity
       const newList = [...tempChargeList];
-      newList[index].quantity += 1;
+      newList[index].quantity = Number(newList[index].quantity) + 1;
       newList[index].totalPrice = newList[index].quantity * newList[index].unitPrice;
       setTempChargeList(newList);
       const { code, quantity } = newList[index];
@@ -246,6 +266,8 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
             保存并收费
           </Button>,
         ]}
+        onCancel={() => setChargeModal(false)}
+        title="收费详情"
       >
         <div className={styles.chargeModalArea}>
           <div className={styles.chargeListLeft}>
@@ -264,6 +286,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
                   params,
                 });
               }}
+              scroll={{ x: 'max-content', y: 300 }}
               pagination={{
                 pageSize: 5,
                 showSizeChanger: false,
@@ -276,6 +299,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
               rowKey="code"
               scroll={{
                 x: 960,
+                y: 300,
               }}
               value={tempChargeList}
               onChange={setTempChargeList}
@@ -288,7 +312,18 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
                   return [defaultDoms.delete];
                 },
                 onValuesChange: (record, recordList) => {
-                  setTempChargeList(recordList);
+                  console.log('onValuesChange', record, recordList);
+                  const temp = recordList.map((item: any) => {
+                    return {
+                      code: item.code,
+                      chargeItem: item.chargeItem,
+                      quantity: item.quantity,
+                      unitPrice: item.unitPrice,
+                      unit: item.unit,
+                      totalPrice: item.quantity * item.unitPrice,
+                    };
+                  });
+                  setTempChargeList(temp);
                 },
               }}
             />
@@ -298,10 +333,10 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
               <Form form={payForm}>
                 <Row>
                   <Col span={24}>
-                    <Form.Item label="总价">￥{totalPrice.toFixed(2)}</Form.Item>
+                    <Form.Item label="总价">￥{totalPrice?.toFixed(2) || 0}</Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item label="已收">￥</Form.Item>
+                    <Form.Item label="已收">￥{chargeItem?.paid?.toFixed(2) || 0}</Form.Item>
                   </Col>
                   <Col span={24}>
                     <Form.Item label="收款">

@@ -4,7 +4,8 @@ import { Tabs, Spin } from 'antd';
 import styles from './index.less';
 import Info from './Info';
 import MedicalRecord from '@/pages/MedicalRecord';
-import ChargeRecord from '../ChargeRecord';
+import ChargeRecord from '@/pages/ChargeRecord';
+import DicomRecord from '@/pages/DicomRecord';
 
 const { TabPane } = Tabs;
 
@@ -67,7 +68,7 @@ const PatientManage: React.FC = () => {
             {!patientId && <ChargeRecord chargeRecord={chargeRecord} />}
           </TabPane>
           <TabPane tab="医学影像" key="4">
-            Content of Tab Pane 3
+            {!patientId && <DicomRecord />}
           </TabPane>
         </Tabs>
       </Spin>

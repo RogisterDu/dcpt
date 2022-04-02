@@ -18,7 +18,7 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ chargeRecord }) => {
   const renderTimeLines = (chargeItem: any) => {
     console.log('1111', chargeItem);
     return (
-      <Timeline.Item label={chargeItem.time}>
+      <Timeline.Item label={chargeItem.time} key={chargeItem.id}>
         <ChargeCard chargeItem={chargeItem} />
         {/* <RecordCard chargeItem={chargeItem} /> */}
       </Timeline.Item>
@@ -35,24 +35,24 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ chargeRecord }) => {
       chargeDetail: [
         {
           serial: 1,
+          code: 1244,
           chargeItem: '检查费',
-          unitprice: '100',
+          unitPrice: 100,
           unit: '元/件',
-          total: '100',
-          quantity: '1',
+          quantity: 1,
         },
         {
           serial: 2,
+          code: 1247,
           chargeItem: '一次性口腔包',
-          unitprice: '1500',
+          unitPrice: 1500,
           unit: '元/人次',
-          total: '1500',
-          quantity: '1',
+          quantity: 1,
         },
       ],
       amount: '2000',
-      shouldPay: '2000',
-      paid: '2000',
+      shouldPay: 2000,
+      paid: 2000,
       status: 0,
     },
     {
@@ -64,24 +64,23 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ chargeRecord }) => {
       doctorId: 2,
       chargeDetail: [
         {
+          code: 1244,
           chargeItem: '检查费',
-          unitprice: '10000',
+          unitprice: 10000,
           unit: '元/件',
-          total: '1000',
-          quantity: '1',
+          quantity: 1,
         },
         {
           chargeItem: '一次性口腔包',
-          unitprice: '1500',
+          unitprice: 1500,
           unit: '元/人次',
-          total: '1500',
-          quantity: '1',
+          quantity: 1,
         },
       ],
       status: 1,
-      amount: '2000',
+      amount: 2000,
       shouldPay: '2000',
-      paid: '2000',
+      paid: 2000,
     },
     {
       id: 3,

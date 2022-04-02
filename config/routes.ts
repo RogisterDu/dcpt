@@ -31,12 +31,12 @@ export default [
         path: '/center',
         redirect: '/center/home',
       },
-      {
-        path: '/center/home',
-        name: '首页',
-        icon: 'smile',
-        component: './Home',
-      },
+      // {
+      //   path: '/center/home',
+      //   name: '首页',
+      //   icon: 'smile',
+      //   component: './Home',
+      // },
       {
         path: '/center/visitLog',
         name: '来访日志',
@@ -47,8 +47,7 @@ export default [
         path: '/center/patient',
         name: '病人列表',
         icon: 'smile',
-        component: './PatientManage',
-        // routes: [{
+        component: './PatientManage', // routes: [{
         //   path: '/center/patientInfo',
         //   name: '病人信息',
         //   component: './PatientManage/Info/[id$].tsx',
@@ -66,14 +65,20 @@ export default [
     path: '/admin',
     name: '管理页',
     icon: 'crown',
-    access: 'canAdmin',
-    component: './Admin',
+    // access: 'canAdmin',
+    // component: './Admin',
     routes: [
+      // {
+      //   path: '/admin/sub-page',
+      //   name: '二级管理页',
+      //   icon: 'smile',
+      //   component: './Welcome',
+      // },
       {
-        path: '/admin/sub-page',
-        name: '二级管理页',
+        name: '个人设置',
         icon: 'smile',
-        component: './Welcome',
+        path: '/admin/accountsettings',
+        component: './AccountSettings',
       },
       {
         component: './404',
