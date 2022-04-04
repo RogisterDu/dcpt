@@ -31,6 +31,12 @@ export default [
         path: '/center',
         redirect: '/center/home',
       },
+      {
+        path: '/center/home',
+        name: '首页',
+        icon: 'smile',
+        component: './DashboardAnalysis',
+      },
       // {
       //   path: '/center/home',
       //   name: '首页',
