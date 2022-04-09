@@ -12,11 +12,12 @@ import './coverAntd.less';
 
 const { RangePicker } = DatePicker;
 
-const SearchForm: React.FC<{ searchFormConfig: any[]; resetForm: any; searchForm: any }> = ({
-  searchFormConfig,
-  resetForm,
-  searchForm,
-}) => {
+const SearchForm: React.FC<{
+  searchFormConfig: any[];
+  resetForm: any;
+  searchForm: any;
+  formrefresh: any;
+}> = ({ searchFormConfig, resetForm, searchForm, formrefresh }) => {
   const [TotalSearchForm] = Form.useForm(); // 定义表单实例
   // const [values, setFormValues] = useState({})
   const [collapsedStatus, setCollapsedStatus] = useState(true);
@@ -66,6 +67,18 @@ const SearchForm: React.FC<{ searchFormConfig: any[]; resetForm: any; searchForm
     const formValues = TotalSearchForm.getFieldsValue();
     searchForm(formValues);
   };
+
+  const resetFormValues = () => {
+    TotalSearchForm.resetFields();
+    toSearch();
+  };
+
+  useEffect(() => {
+    // console.log(searchForm)
+    if (formrefresh !== 0) {
+      resetFormValues();
+    }
+  }, [formrefresh]);
 
   const changeCollapsedStatus = useCallback(() => {
     setCollapsedStatus(!collapsedStatus);

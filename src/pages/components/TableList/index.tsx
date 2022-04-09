@@ -31,14 +31,14 @@ const TableList: React.FC<Iprops> = (props) => {
 
     request(api, {
       method: 'POST',
-      params: {
+      data: {
         ...values,
         pageNo,
         pageSize,
       },
     }).then((res) => {
       // 需要将数据处理成需要的格式
-      const data = res?.data?.dataList || [];
+      const data = res?.data?.data || [];
       if (Array.isArray(data)) {
         const totalPage = res?.data?.total || 0;
         setTotal(totalPage);
@@ -79,6 +79,8 @@ const TableList: React.FC<Iprops> = (props) => {
     switch (item.renderType) {
       case 'dateTime':
         return value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : '-';
+      case 'boolean':
+        return value ? '是' : '否';
       default:
         return value || '-';
     }

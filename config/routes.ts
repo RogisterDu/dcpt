@@ -60,6 +60,12 @@ export default [
         // }]
       },
       {
+        path: '/center/reservation',
+        name: '预约管理',
+        icon: 'smile',
+        component: './Reservation',
+      },
+      {
         path: '/center/exportTask',
         name: '导出任务',
         icon: 'smile',

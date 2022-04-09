@@ -77,7 +77,7 @@ const IntroduceRow = ({ loading, visitData = [] }: { loading: boolean; visitData
       <ChartCard
         bordered={false}
         loading={loading}
-        title="支付笔数"
+        title="今日初诊"
         action={
           <Tooltip title="指标说明">
             <InfoCircleOutlined />

@@ -84,6 +84,7 @@ request.interceptors.request.use((url, options) => {
         Authorization: getToken() || '',
         // languageId,
         // uid: JsCookie.get('accessUid') || '',
+        'Content-Type': 'application/json',
         ...headers,
       },
     },

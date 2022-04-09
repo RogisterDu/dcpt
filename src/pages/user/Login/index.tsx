@@ -7,6 +7,7 @@ import { getToken, setToken } from '@/utils/token';
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [loginForm] = Form.useForm();
+  // const { initialState, setInitialState } = useModel('@@initialState');
   const onFinish = async (values: any) => {
     // console.log('Success:', values);
     setLoading(true);

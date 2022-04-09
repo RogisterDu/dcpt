@@ -5,23 +5,37 @@ import './coverAntd.less';
 import SearchForm from '@/pages/components/SearchForm';
 import TableList from '@/pages/components/TableList';
 import { visitSearchConfig, visitTableColumns, visitLogFormItems } from './data';
-import { Button } from 'antd';
+import { Button, Divider, message, Tooltip } from 'antd';
 import AddModal from './components/AddModal';
+import { addNewVisitLog, invaildVisitLog } from '@/services/visit';
+import moment from 'moment';
 
 const VisitLog: React.FC = () => {
   const [values, setValues] = useState({});
   const [selected, setSelected] = useState({});
   const [logModalVisable, setLogModalVisable] = useState(false);
+  const [formrefresh, setFormrefresh] = useState(0);
   // const [visitId, setVisitId] = useState('');
 
-  const toSbumitVisitLog = (Logvalues: any, hasId: any) => {
+  const toSubmitVisitLog = (Logvalues: any, hasId: any) => {
     console.log('Logvalues', Logvalues);
     console.log('hasId', hasId);
-    setLogModalVisable(false);
+
+    addNewVisitLog({ ...Logvalues }).then((res) => {
+      if (res.code) {
+        setLogModalVisable(false);
+        setFormrefresh(Date.now());
+      }
+    });
   };
 
   const toSearch = (conditon: any) => {
-    setValues({ ...conditon });
+    const { visitTime, ...rest } = conditon;
+    if (visitTime && visitTime.length > 0) {
+      rest.visitTimeStart = moment(visitTime[0]).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+      rest.visitTimeEnd = moment(visitTime[1]).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+    }
+    setValues({ ...rest });
   };
 
   const toReset = () => {};
@@ -33,8 +47,18 @@ const VisitLog: React.FC = () => {
     }
   };
 
-  const toDelete = (id: any) => {
+  const toSeeDoctor = (record: any) => {
+    console.log('查看医生', record);
+  };
+
+  const toInvalid = (id: any) => {
     console.log('删除', id);
+    invaildVisitLog({ id }).then((res) => {
+      if (res.code) {
+        setFormrefresh(Date.now());
+      }
+      message.success(res.message || '作废成功');
+    });
   };
 
   const toAddNewLog = () => {
@@ -49,9 +73,35 @@ const VisitLog: React.FC = () => {
       // console.log(record);
       return (
         <>
-          <a onClick={() => toDelete(id)}>新增为病人</a>
-          <a onClick={() => toDelete(id)}>作废</a>
+          <a onClick={() => toSeeDoctor(record)}>就诊</a>
+          <Divider type="vertical" />
+          <a onClick={() => toInvalid(id)}>作废</a>
         </>
+      );
+    },
+    greenCodeRender: (record: any) => {
+      console.log('record', record);
+      const codeStatus = ['绿码', '红码', '黄码'];
+      return codeStatus[record.greenCode];
+    },
+    identityIdRender: (record: any) => {
+      const { identityID } = record;
+      return (
+        <Tooltip title={identityID} placement="topLeft">
+          <div>{identityID.slice(0, 7)}*********</div>
+        </Tooltip>
+      );
+    },
+    addressRender: (record: any) => {
+      const { address, pcr } = record;
+      const pcr_str = pcr?.join('-') || '';
+      return (
+        <Tooltip title={`${pcr_str}${address}`} placement="topLeft">
+          <div>
+            {pcr_str}
+            {address.slice(0, 5)}******
+          </div>
+        </Tooltip>
       );
     },
   };
@@ -62,7 +112,12 @@ const VisitLog: React.FC = () => {
 
   return (
     <div>
-      <SearchForm searchFormConfig={visitSearchConfig} resetForm={toReset} searchForm={toSearch} />
+      <SearchForm
+        searchFormConfig={visitSearchConfig}
+        resetForm={toReset}
+        searchForm={toSearch}
+        formrefresh={formrefresh}
+      />
       <div className={styles.searchArea}>
         <div className={styles.actionArea}>
           <Button type="primary" onClick={toAddNewLog}>
@@ -76,7 +131,7 @@ const VisitLog: React.FC = () => {
           <TableList
             values={values}
             tableColumns={visitTableColumns}
-            api={'/dcpt/visitList'}
+            api={'/api/visitor/query/paging'}
             rowSelection={changeSelect}
             {...tableRenders}
           />
@@ -94,7 +149,7 @@ const VisitLog: React.FC = () => {
         formItems={visitLogFormItems}
         title="新增日志"
         hasId={''}
-        toSubmitForm={() => toSbumitVisitLog}
+        toSubmitForm={toSubmitVisitLog}
         visible={logModalVisable}
         onCancel={() => setLogModalVisable(false)}
       />

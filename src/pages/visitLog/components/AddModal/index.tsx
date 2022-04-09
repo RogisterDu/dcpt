@@ -1,8 +1,8 @@
 import React from 'react';
-import { Form, Input, InputNumber, Modal, Select } from 'antd';
+import { Cascader, Form, Input, InputNumber, Modal, Select } from 'antd';
 import type { ModalProps } from 'antd/lib/modal';
 
-interface AddModalprops extends Omit<ModalProps, 'onOk' | 'onCancel'> {
+interface AddModalprops extends Omit<ModalProps, 'onOk'> {
   toSubmitForm: (values: any, hasId: any) => void;
   hasId?: string | number | undefined;
   formItems: any[];
@@ -27,7 +27,13 @@ const AddModal: React.FC<AddModalprops> = ({ toSubmitForm, hasId, formItems, ...
       case 'Number':
         return (
           <Form.Item label={item.label} name={item.name} key={item.name} rules={item.rules || []}>
-            <InputNumber {...item.itemProps} style={{ width: '346px' }} />
+            <InputNumber {...item.itemProps} style={{ width: '285px' }} />
+          </Form.Item>
+        );
+      case 'Cascader':
+        return (
+          <Form.Item label={item.label} name={item.name} key={item.name} rules={item.rules || []}>
+            <Cascader {...item.itemProps} />
           </Form.Item>
         );
       default:
@@ -36,6 +42,7 @@ const AddModal: React.FC<AddModalprops> = ({ toSubmitForm, hasId, formItems, ...
   };
   const handletoSubmit = () => {
     submitForm.validateFields().then((values) => {
+      console.log('111');
       toSubmitForm(values, hasId);
     });
   };

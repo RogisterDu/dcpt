@@ -118,7 +118,7 @@ const BaseView: React.FC = () => {
                 ]}
                 placeholder="个人简介"
               />
-              <ProFormSelect
+              {/* <ProFormSelect
                 width="sm"
                 name="country"
                 label="国家/地区"
@@ -134,7 +134,7 @@ const BaseView: React.FC = () => {
                     value: 'China',
                   },
                 ]}
-              />
+              /> */}
 
               <ProForm.Group title="所在省市" size={8}>
                 <ProFormSelect

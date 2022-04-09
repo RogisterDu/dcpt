@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 // import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 // import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
+import { getToken } from './utils/token';
 
 // const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -61,10 +62,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     footerRender: () => <Footer />,
     onPageChange: () => {
       // const { location } = history;
+      // history.push(loginPath);
       // 如果没有登录，重定向到 login
-      // if (!initialState?.currentUser && location.pathname !== loginPath) {
-      //   history.push(loginPath);
-      // }
+      console.log('onPageChange token', getToken());
+      if (!getToken() && history.location.pathname !== loginPath) {
+        history.push(loginPath);
+      }
     },
     // links: isDev
     //   ? [
