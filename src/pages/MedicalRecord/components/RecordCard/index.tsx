@@ -12,6 +12,7 @@ import {
   Col,
   Radio,
   Divider,
+  message,
 } from 'antd';
 import styles from '../../index.less';
 import '../../antdCover.less';
@@ -20,7 +21,9 @@ import DropSelect from '@/pages/components/DropSelect';
 import ProList from '@ant-design/pro-list';
 interface RecordCardProps {
   recordItem: any;
+  handletoRefresh: () => void;
 }
+import { editRecord } from '@/services/record';
 
 interface infoInterface {
   main: string;
@@ -45,7 +48,7 @@ interface templateInterface {
   advice: string;
 }
 
-const RecordCard: React.FC<RecordCardProps> = ({ recordItem }) => {
+const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) => {
   const [editVisable, setEditVisable] = useState(false); //病例数据编辑弹窗
   const [temaplateData, setTemaplateData] = useState<any>([]); //病例模板数据
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly ReactText[]>([]);
@@ -134,7 +137,7 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem }) => {
 
   //Card病例详情内容
   const renderInfo = (Detailinfo: infoInterface) => {
-    // console.log('Detailinfo', Detailinfo);
+    console.log('Detailinfo', Detailinfo);
     const { main, now, cure, check, history, allergic, epidemic } = Detailinfo;
     return (
       <div className={styles.details}>
@@ -155,9 +158,9 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem }) => {
             {allergic || '-'}
           </Descriptions.Item>
           <Descriptions.Item label="检查" span={4}>
-            {check.map((item: any) => {
+            {check?.map((item: any) => {
               return renderCheckDetail(item);
-            })}
+            }) || '-'}
           </Descriptions.Item>
           <Descriptions.Item label="治疗方案" span={4}>
             {cure || '-'}
@@ -180,10 +183,26 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem }) => {
 
   //提交病例Form表单
   const onSubmitEditForm = () => {
+    const { id } = recordItem;
     console.log('111');
+
     editForm.validateFields().then((Formvalues) => {
-      console.log('Formvalues', Formvalues);
-      console.log(Formvalues);
+      const { doctor, ...trueValues } = Formvalues;
+      console.log('Formvalues', Formvalues, doctor);
+      trueValues.doctor = doctor.value;
+      editRecord({ id, ...trueValues }).then((res) => {
+        console.log('res', res);
+        if (res.code) {
+          message.success('修改成功');
+          handletoRefresh();
+          setEditVisable(false);
+        } else {
+          message.error('修改失败');
+        }
+      });
+
+      // console.log('Formvalues', Formvalues);
+      // console.log(Formvalues);
     });
   };
 
@@ -201,10 +220,15 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem }) => {
 
   //
   const toEdit = () => {
+    const { doctor_id, doctor, ...restInfo } = info;
+    restInfo.doctor = {
+      value: doctor_id,
+      label: doctor,
+    };
     // console.log('rItem', rItem);
     setEditVisable(true);
     editForm.setFieldsValue({
-      ...info,
+      ...restInfo,
       ...rest,
     });
   };
@@ -303,7 +327,7 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem }) => {
                   <Form.Item label="主治医师" name="doctor">
                     <DropSelect
                       searchInfo={{
-                        api: '/dcpt/api/doctor/search',
+                        api: '/api/doctor/query/list',
                       }}
                       placeholder="请选择主治医生"
                     />

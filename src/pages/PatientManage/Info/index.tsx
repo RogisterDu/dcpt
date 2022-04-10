@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FormDetail from '@/pages/components/FormDetail';
 import { Avatar, Rate } from 'antd';
 import styles from '../index.less';
+import { queryPatientDetails } from '@/services/patient';
 
 interface Iprops {
-  patientInfo: any;
+  patientId: any;
 }
-const Info: React.FC<Iprops> = ({ patientInfo }) => {
+const Info: React.FC<Iprops> = ({ patientId }) => {
+  const [patientInfo, setPatientInfo] = useState<any>({});
+
+  useEffect(() => {
+    console.log('info', patientId);
+    if (patientId) {
+      queryPatientDetails({ patientId }).then((res) => {
+        setPatientInfo(res.data || {});
+        console.log(res.data);
+      });
+    } else {
+      setPatientInfo({});
+    }
+  }, [patientId]);
   const dataConfig = [
     {
       title: '基本信息',
@@ -24,12 +38,12 @@ const Info: React.FC<Iprops> = ({ patientInfo }) => {
         },
         {
           label: '出生年月',
-          defaultValue: patientInfo?.birthday || '-',
+          defaultValue: patientInfo?.birth || '-',
           key: 'birthday',
         },
         {
           label: '手  机',
-          defaultValue: patientInfo?.phone || '-',
+          defaultValue: patientInfo?.contact || '-',
           key: 'phone',
         },
         {
@@ -60,8 +74,8 @@ const Info: React.FC<Iprops> = ({ patientInfo }) => {
       children: [
         {
           label: '家庭住址',
-          defaultValue: patientInfo?.home || '-',
-          key: 'orderNo',
+          defaultValue: `${patientInfo?.pcr?.join(' ') || '-'}  ${patientInfo?.address || '-'}`,
+          key: 'home',
         },
       ],
     },

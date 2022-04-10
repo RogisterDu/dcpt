@@ -16,7 +16,7 @@ const DropSelect: React.FC<DropSelectProps> = ({ searchInfo, ...props }) => {
     setLoading(true);
     request(api).then((res) => {
       setOptions(
-        res?.data?.map((item: any) => ({
+        res?.data?.data?.map((item: any) => ({
           label: item.desc,
           value: item.code,
         })) || [],
@@ -25,6 +25,6 @@ const DropSelect: React.FC<DropSelectProps> = ({ searchInfo, ...props }) => {
     });
   }, [api]);
 
-  return <Select options={options} loading={loading} {...props}></Select>;
+  return <Select options={options} loading={loading} {...props} labelInValue />;
 };
 export default DropSelect;
