@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Col, Form, InputNumber, List, Row } from 'antd';
+import { Button, Card, Col, Divider, Form, InputNumber, List, message, Row } from 'antd';
 import styles from '../../index.less';
 import '../../antdCover.less';
 import { AppstoreAddOutlined, PlusCircleOutlined } from '@ant-design/icons';
@@ -7,9 +7,11 @@ import Modal from 'antd/lib/modal/Modal';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { EditableProTable } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import request from '@/utils/request';
+import { queryChargeList } from '@/services/charge';
+import { saveChargeItem, payToCharge } from '@/services/fee';
 interface ChargeCardProps {
   chargeItem: any;
+  handletoRefresh: () => void;
 }
 
 type GithubIssueItem = {
@@ -17,6 +19,7 @@ type GithubIssueItem = {
   code: number;
   state: string;
   unitPrice: number;
+  unit: string;
 };
 
 type DataSourceType = {
@@ -28,7 +31,7 @@ type DataSourceType = {
   totalPrice: number;
 };
 
-const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
+const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) => {
   const actionRef = useRef<ActionType>();
   const editActionRef = useRef<ActionType>();
   const [chargeModal, setChargeModal] = useState(false);
@@ -43,7 +46,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
       <>
         <List split style={{ width: '860px' }}>
           <List.Item className={styles.listItem}>
-            <div className={styles.listArea}>序号</div>
+            <div className={styles.listArea}>项目编码</div>
             <div className={styles.listArea}>收费项目</div>
             <div className={styles.listArea}>单价</div>
             <div className={styles.listArea}>数量</div>
@@ -52,14 +55,14 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
           {chargeDetail.map((item: any) => {
             return (
               <List.Item key={item.serial} className={styles.listItem}>
-                <div className={styles.listArea}>{item.serial}</div>
+                <div className={styles.listArea}>{item.code}</div>
                 <div className={styles.listArea}>{item.chargeItem}</div>
                 <div className={styles.listArea}>
-                  {item.unitprice}&nbsp;
+                  {item.unitPrice}元 &nbsp;/&nbsp;
                   {item.unit}
                 </div>
                 <div className={styles.listArea}>{item.quantity}</div>
-                <div className={styles.listArea}>{item.total}</div>
+                <div className={styles.listArea}>{item.unitPrice * item.quantity}&nbsp;元</div>
               </List.Item>
             );
           })}
@@ -67,6 +70,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
       </>
     );
   };
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const rendertitle = () => {
     const { time } = chargeItem;
@@ -92,11 +96,16 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
     setTempChargeList(temp);
   };
 
-  const renderCardExtra = (id: any) => {
-    console.log('id', id);
+  const renderCardExtra = () => {
+    const { status } = chargeItem;
+    const btnRender = ['编辑', '收费'];
     return (
       <>
-        <a onClick={() => toShowCharge()}>收费</a>
+        {status !== 4 && status !== 5 ? (
+          <a onClick={() => toShowCharge()}>{btnRender[status]}</a>
+        ) : null}
+        {status !== 4 && 4 ? <Divider type="vertical" /> : null}
+        {status !== 5 && <a onClick={() => toShowCharge()}>作废</a>}
       </>
     );
   };
@@ -109,10 +118,74 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
 
   const justToSave = () => {
     console.log('justToSave');
+    console.log('template', tempChargeList);
+    if (tempChargeList.length === 0) {
+      message.error('请先添加收费项目');
+      return;
+    }
+    setSaveLoading(true);
+    const params = {
+      chargeDetail: tempChargeList,
+      fee_id: chargeItem.id,
+    };
+    saveChargeItem(params)
+      .then((res) => {
+        if (res.code) {
+          setChargeModal(false);
+          handletoRefresh();
+          message.success('保存成功');
+        } else {
+          message.error(res.message);
+        }
+      })
+      .finally(() => {
+        setSaveLoading(false);
+      });
+
+    // handletoRefresh();
   };
 
   const toCharge = () => {
     console.log('toCharge');
+    const newPay = payForm.getFieldValue('newPay');
+    if (!newPay) {
+      message.error('请输入支付金额');
+      return;
+    }
+    console.log('justToSave');
+    console.log('template', tempChargeList);
+    if (tempChargeList.length === 0) {
+      message.error('请先添加收费项目');
+      return;
+    }
+    setSaveLoading(true);
+    const params = {
+      chargeDetail: tempChargeList,
+      fee_id: chargeItem.id,
+    };
+    saveChargeItem(params)
+      .then((res1) => {
+        if (res1.code) {
+          payToCharge({
+            fee_id: chargeItem.id,
+            newPay: newPay,
+            total: totalPrice,
+          }).then((res2: any) => {
+            if (res2.code) {
+              message.success('支付成功');
+              setChargeModal(false);
+              handletoRefresh();
+            } else {
+              message.error(res2.message || '支付失败');
+            }
+          });
+        } else {
+          message.error(res1.message || '收费记录保存失败');
+        }
+      })
+      .finally(() => {
+        setSaveLoading(false);
+      });
   };
 
   // console.log('editableKeys', editableKeys);
@@ -144,7 +217,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
   };
   const toAddAsChargeItem = (record: any) => {
     //find the index of the record
-    const index = tempChargeList.findIndex((item: any) => item.id === record.id);
+    const index = tempChargeList.findIndex((item: any) => item.code === record.code);
     if (index === -1) {
       //add new record
       setTempChargeList([
@@ -206,7 +279,15 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
       title: '单价',
       dataIndex: 'unitPrice',
       hideInSearch: true,
+      render: (_text, record) => {
+        return `${record.unitPrice.toFixed(2)}元/${record.unit}`;
+      },
     },
+    // {
+    //   title: '单位',
+    //   dataIndex: 'unit',
+    //   hideInSearch: true,
+    // },
   ];
 
   const realChargecolumns: ProColumns<DataSourceType>[] = [
@@ -225,6 +306,9 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
       title: '单价',
       dataIndex: 'unitPrice',
       editable: false,
+      render: (_text, record) => {
+        return `${record.unitPrice.toFixed(2)}元/${record.unit}`;
+      },
     },
     {
       title: '数量',
@@ -256,13 +340,13 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
         centered
         visible={chargeModal}
         footer={[
-          <Button key="back" onClick={() => setChargeModal(false)}>
+          <Button key="back" onClick={() => setChargeModal(false)} loading={saveLoading}>
             cancel
           </Button>,
-          <Button key="saveTemplate" onClick={justToSave}>
+          <Button key="saveTemplate" onClick={justToSave} loading={saveLoading}>
             保存
           </Button>,
-          <Button key="submit" type="primary" onClick={toCharge}>
+          <Button key="submit" type="primary" onClick={toCharge} loading={saveLoading}>
             保存并收费
           </Button>,
         ]}
@@ -280,11 +364,15 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
               headerTitle="收费项目"
               request={async (params = {}, sort, filter) => {
                 console.log(sort, filter);
-                return request<{
-                  data: GithubIssueItem[];
-                }>('/dcpt/chargeList/chargeItem', {
-                  params,
+                const res = await queryChargeList({
+                  pageNo: params.current,
+                  pageSize: params.pageSize,
                 });
+                return {
+                  data: res.data.data,
+                  success: true,
+                  total: res.data.total,
+                };
               }}
               scroll={{ x: 'max-content', y: 300 }}
               pagination={{
@@ -294,7 +382,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
             />
             <EditableProTable<DataSourceType>
               actionRef={editActionRef}
-              headerTitle="可编辑表格"
+              headerTitle="收费列表"
               columns={realChargecolumns}
               rowKey="code"
               scroll={{
@@ -339,7 +427,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
                     <Form.Item label="已收">￥{chargeItem?.paid?.toFixed(2) || 0}</Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item label="收款">
+                    <Form.Item label="收款" name="newPay">
                       <InputNumber />
                     </Form.Item>
                   </Col>
@@ -349,17 +437,29 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem }) => {
           </div>
         </div>
       </Modal>
-      <Card
-        hoverable
-        key={chargeItem.id}
-        title={rendertitle()}
-        extra={
-          chargeDetail && Object.keys(chargeDetail).length > 0 ? renderCardExtra(chargeItem) : null
-        }
-        style={{ width: 1000 }}
-      >
-        {chargeDetail && Object.keys(chargeDetail).length > 0 ? renderInfo() : renderAddDetail()}
-      </Card>
+      <div className={styles.cardContainer}>
+        {/* <Image
+          src="https://rogister.oss-cn-hangzhou.aliyuncs.com/img/1.png"
+          preview={false}
+          className={styles.statusImg}
+        /> */}
+        {chargeItem.status !== 0 && (
+          <div className={styles.statusText}>
+            <div className={styles.textinner}>
+              {['待结算', '未结清', '已完成', '已作废'][chargeItem.status - 1]}
+            </div>
+          </div>
+        )}
+        <Card
+          hoverable
+          key={chargeItem.id}
+          title={rendertitle()}
+          extra={chargeDetail && Object.keys(chargeDetail).length > 0 ? renderCardExtra() : null}
+          style={{ width: 1000 }}
+        >
+          {chargeDetail && Object.keys(chargeDetail).length > 0 ? renderInfo() : renderAddDetail()}
+        </Card>
+      </div>
     </>
   );
 };

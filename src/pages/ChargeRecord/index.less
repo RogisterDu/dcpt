@@ -56,3 +56,38 @@
     border-left: 1px solid #808080 85%;
   }
 }
+
+.cardContainer {
+  position: relative;
+  .statusImg {
+    position: absolute;
+    top: 60px;
+    right: -1030px;
+    z-index: 1;
+    width: 100px;
+    opacity: 0.6;
+  }
+  .statusText {
+    position: absolute;
+    top: 60px;
+    right: -422px;
+    z-index: 10;
+    width: 100px;
+    color: red;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    text-shadow: 0 0 1px red;
+    border: red 3px solid;
+    transform: rotate(25deg);
+    opacity: 0.6;
+    filter: blur(0.6px);
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
