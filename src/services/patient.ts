@@ -13,3 +13,10 @@ export async function queryPatientDetails(params: any) {
     method: 'GET',
   });
 }
+
+export async function queryFuzzyPatient(params: any) {
+  return request('/api/patient/list/query/fuzzy', {
+    method: 'GET',
+    params,
+  });
+}

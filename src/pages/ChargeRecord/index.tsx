@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Timeline } from 'antd';
+import { Button, message, Timeline } from 'antd';
 // import RecordCard from './components/RecordCard';
 import ChargeCard from './components/ChargeCard';
 import styles from './index.less';
 import './antdCover.less';
-import { queryFeeList } from '@/services/fee';
+import { addEmptyCharge, queryFeeList } from '@/services/fee';
 
 interface chargeRecordProps {
   patientId: any;
@@ -31,7 +31,14 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId }) => {
   };
 
   const toAddNewCharge = () => {
-    console.log('toAddNewCharge');
+    addEmptyCharge({ patientId }).then((res: any) => {
+      if (res.code) {
+        getFeeList();
+      } else {
+        message.error(res.message || '添加失败');
+      }
+    });
+    // console.log('toAddNewCharge');
   };
 
   const renderTimeLines = (chargeItem: any) => {

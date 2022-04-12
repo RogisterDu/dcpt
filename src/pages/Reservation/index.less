@@ -2,3 +2,23 @@
   padding: 30px;
   background-color: white;
 }
+
+.recordArea {
+  display: grid;
+  grid-template-columns: 70px 50px 30px 40px 30px;
+
+  :hover {
+    color: blue;
+  }
+  .recordText {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.BadgeArea {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}

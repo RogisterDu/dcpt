@@ -8,7 +8,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { EditableProTable } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { queryChargeList } from '@/services/charge';
-import { saveChargeItem, payToCharge } from '@/services/fee';
+import { saveChargeItem, payToCharge, toVaildCharge } from '@/services/fee';
 interface ChargeCardProps {
   chargeItem: any;
   handletoRefresh: () => void;
@@ -32,6 +32,9 @@ type DataSourceType = {
 };
 
 const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) => {
+  console.log('chargeItem', chargeItem.status);
+  const statusText = ['0', '待结算', '未付清', '已完成', '已作废'][chargeItem.status];
+  // console.log('statusText', statusText, chargeItem.status);
   const actionRef = useRef<ActionType>();
   const editActionRef = useRef<ActionType>();
   const [chargeModal, setChargeModal] = useState(false);
@@ -58,11 +61,13 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
                 <div className={styles.listArea}>{item.code}</div>
                 <div className={styles.listArea}>{item.chargeItem}</div>
                 <div className={styles.listArea}>
-                  {item.unitPrice}元 &nbsp;/&nbsp;
+                  {item?.unitPrice?.toFixed(2) || 0}元 &nbsp;/&nbsp;
                   {item.unit}
                 </div>
                 <div className={styles.listArea}>{item.quantity}</div>
-                <div className={styles.listArea}>{item.unitPrice * item.quantity}&nbsp;元</div>
+                <div className={styles.listArea}>
+                  {(item?.unitPrice * item?.quantity).toFixed(2) || 0}&nbsp;元
+                </div>
               </List.Item>
             );
           })}
@@ -96,16 +101,28 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
     setTempChargeList(temp);
   };
 
+  const toInvaidCharge = () => {
+    const { id } = chargeItem;
+    toVaildCharge({ id }).then((res: any) => {
+      if (res.code) {
+        message.success('作废成功');
+        handletoRefresh();
+      } else {
+        message.error(res.message || '作废失败');
+      }
+    });
+  };
+
   const renderCardExtra = () => {
     const { status } = chargeItem;
-    const btnRender = ['编辑', '收费'];
+    const btnRender = ['编辑', '收费', '支付'];
     return (
       <>
-        {status !== 4 && status !== 5 ? (
+        {status !== 3 && status !== 4 ? (
           <a onClick={() => toShowCharge()}>{btnRender[status]}</a>
         ) : null}
-        {status !== 4 && 4 ? <Divider type="vertical" /> : null}
-        {status !== 5 && <a onClick={() => toShowCharge()}>作废</a>}
+        {status !== 4 && status !== 3 ? <Divider type="vertical" /> : null}
+        {status !== 4 && <a onClick={() => toInvaidCharge()}>作废</a>}
       </>
     );
   };
@@ -163,29 +180,49 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
       chargeDetail: tempChargeList,
       fee_id: chargeItem.id,
     };
-    saveChargeItem(params)
-      .then((res1) => {
-        if (res1.code) {
-          payToCharge({
-            fee_id: chargeItem.id,
-            newPay: newPay,
-            total: totalPrice,
-          }).then((res2: any) => {
-            if (res2.code) {
-              message.success('支付成功');
-              setChargeModal(false);
-              handletoRefresh();
-            } else {
-              message.error(res2.message || '支付失败');
-            }
-          });
-        } else {
-          message.error(res1.message || '收费记录保存失败');
-        }
+    if (chargeItem.status === 0 || chargeItem.status === 1) {
+      saveChargeItem(params)
+        .then((res1) => {
+          if (res1.code) {
+            payToCharge({
+              fee_id: chargeItem.id,
+              newPay: newPay,
+              total: totalPrice,
+            }).then((res2: any) => {
+              if (res2.code) {
+                message.success('支付成功');
+                setChargeModal(false);
+                handletoRefresh();
+              } else {
+                message.error(res2.message || '支付失败');
+              }
+            });
+          } else {
+            message.error(res1.message || '收费记录保存失败');
+          }
+        })
+        .finally(() => {
+          setSaveLoading(false);
+        });
+    } else {
+      payToCharge({
+        fee_id: chargeItem.id,
+        newPay: newPay,
+        total: totalPrice,
       })
-      .finally(() => {
-        setSaveLoading(false);
-      });
+        .then((res2: any) => {
+          if (res2.code) {
+            message.success('支付成功');
+            setChargeModal(false);
+            handletoRefresh();
+          } else {
+            message.error(res2.message || '支付失败');
+          }
+        })
+        .finally(() => {
+          setSaveLoading(false);
+        });
+    }
   };
 
   // console.log('editableKeys', editableKeys);
@@ -313,7 +350,13 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
     {
       title: '数量',
       dataIndex: 'quantity',
-      // editable: false,
+      renderFormItem: (item, { value, onChange }) => (
+        <InputNumber
+          disabled={chargeItem.status !== 0 && chargeItem.status !== 1}
+          value={value}
+          onChange={onChange}
+        />
+      ),
     },
     {
       title: '总价',
@@ -323,16 +366,16 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
       valueType: 'money',
       editable: false,
     },
-    {
-      title: '操作',
-      valueType: 'option',
-      width: 250,
-      render: () => {
-        return null;
-      },
-    },
   ];
 
+  const Realaction: any = {
+    title: '操作',
+    valueType: 'option',
+    width: 250,
+    render: () => {
+      return null;
+    },
+  };
   return (
     <>
       <Modal
@@ -356,34 +399,41 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
         <div className={styles.chargeModalArea}>
           <div className={styles.chargeListLeft}>
             收费项目
-            <ProTable
-              columns={columns}
-              rowKey="code"
-              actionRef={actionRef}
-              dateFormatter="string"
-              headerTitle="收费项目"
-              request={async (params = {}, sort, filter) => {
-                console.log(sort, filter);
-                const res = await queryChargeList({
-                  pageNo: params.current,
-                  pageSize: params.pageSize,
-                });
-                return {
-                  data: res.data.data,
-                  success: true,
-                  total: res.data.total,
-                };
-              }}
-              scroll={{ x: 'max-content', y: 300 }}
-              pagination={{
-                pageSize: 5,
-                showSizeChanger: false,
-              }}
-            />
+            {chargeItem.status == 0 || chargeItem.status == 1 ? (
+              <ProTable
+                columns={columns}
+                rowKey="code"
+                actionRef={actionRef}
+                dateFormatter="string"
+                headerTitle="收费项目"
+                request={async (params = {}, sort, filter) => {
+                  console.log(sort, filter, params);
+                  const res = await queryChargeList({
+                    pageNo: params.current,
+                    pageSize: params.pageSize,
+                    name: params.chargeItem,
+                  });
+                  return {
+                    data: res.data.data,
+                    success: true,
+                    total: res.data.total,
+                  };
+                }}
+                scroll={{ x: 'max-content', y: 300 }}
+                pagination={{
+                  pageSize: 5,
+                  showSizeChanger: false,
+                }}
+              />
+            ) : null}
             <EditableProTable<DataSourceType>
               actionRef={editActionRef}
               headerTitle="收费列表"
-              columns={realChargecolumns}
+              columns={
+                chargeItem.status == 0 || chargeItem.status == 1
+                  ? realChargecolumns.concat(Realaction)
+                  : realChargecolumns
+              }
               rowKey="code"
               scroll={{
                 x: 960,
@@ -444,10 +494,12 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
           className={styles.statusImg}
         /> */}
         {chargeItem.status !== 0 && (
-          <div className={styles.statusText}>
-            <div className={styles.textinner}>
-              {['待结算', '未结清', '已完成', '已作废'][chargeItem.status - 1]}
-            </div>
+          <div
+            className={`${styles.statusText} ${
+              chargeItem.status === 4 ? styles.disabledText : styles.normalText
+            }`}
+          >
+            <div className={styles.textinner}>{statusText}</div>
           </div>
         )}
         <Card
