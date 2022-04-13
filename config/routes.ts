@@ -71,6 +71,12 @@ export default [
         icon: 'smile',
         component: './StoreList',
       },
+      {
+        name: '个人设置',
+        icon: 'smile',
+        path: '/center/accountsettings',
+        component: './AccountSettings',
+      },
     ],
   },
   {
@@ -80,18 +86,29 @@ export default [
     // access: 'canAdmin',
     // component: './Admin',
     routes: [
+      {
+        path: '/admin',
+        redirect: '/admin/chargeManage',
+      },
+      {
+        path: '/admin/chargeManage',
+        name: '收费管理',
+        icon: 'smile',
+        component: './ChargeManage',
+      },
+      {
+        path: '/admin/accountManage',
+        name: '账户管理',
+        icon: 'smile',
+        component: './AccountManage',
+      },
       // {
       //   path: '/admin/sub-page',
       //   name: '二级管理页',
       //   icon: 'smile',
       //   component: './Welcome',
       // },
-      {
-        name: '个人设置',
-        icon: 'smile',
-        path: '/admin/accountsettings',
-        component: './AccountSettings',
-      },
+
       {
         component: './404',
       },
