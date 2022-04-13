@@ -1,0 +1,100 @@
+.flexcenter {
+  display: flex;
+  justify-content: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.medicalArea {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-left: -1300px;
+}
+
+.detailsArea {
+  padding: 20px 10px;
+}
+
+.locationShow {
+  width: 60px;
+  padding: 10px;
+}
+
+.checkContent {
+  margin-top: 20px;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 100px 200px 200px 200px 200px 200px;
+}
+
+.listArea {
+  text-align: center;
+}
+
+.chargeModalArea {
+  display: flex;
+  flex-direction: row;
+  .chargeListLeft {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .chargeDetailRight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    height: 100%;
+    padding: 10px;
+    border-left: 1px solid #808080 85%;
+  }
+}
+
+.cardContainer {
+  position: relative;
+  .statusImg {
+    position: absolute;
+    top: 60px;
+    right: -1030px;
+    z-index: 1;
+    width: 100px;
+    opacity: 0.6;
+  }
+  .statusText {
+    position: absolute;
+    top: 60px;
+    right: -422px;
+    z-index: 10;
+    width: 100px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    transform: rotate(25deg);
+    opacity: 0.6;
+    filter: blur(0.6px);
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .normalText {
+    color: red;
+    text-shadow: 0 0 1px red;
+    border: red 3px solid;
+  }
+  .disabledText {
+    color: grey;
+    text-shadow: 0 0 1px grey;
+    border: grey 3px solid;
+  }
+}

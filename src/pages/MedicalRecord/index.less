@@ -1,0 +1,125 @@
+.flexcenter {
+  display: flex;
+  justify-content: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.detailsArea {
+  padding: 20px 10px;
+}
+
+.cardCover {
+  .ant-card-body {
+    padding: 0 !important;
+  }
+}
+
+.medicalArea {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-left: -1300px;
+}
+
+.editModalArea {
+  display: flex;
+  align-items: start;
+  // justify-content: center;
+  .leftArea {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    // padding: 10px;
+    .templateListArea {
+      // padding: 10px;
+      .templateList {
+        width: 500px;
+        height: 600px;
+        .templateItem {
+          :focus {
+            background-color: black;
+            border: #f5f5f5;
+          }
+        }
+      }
+    }
+    .templateDesc {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+  .rightArea {
+    margin: 5px 20px;
+    padding: 10px;
+    border-left: 1px solid #e2d1d1;
+  }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  .location {
+    max-width: 350px;
+    margin-right: 10px;
+    // .ant-row {
+    //   .ant-form-item {
+    //     margin-bottom: 0 !important;
+    //   }
+    // }
+  }
+}
+
+// .FormItem {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+.removeBottom {
+  margin-bottom: 0 !important;
+  padding: 10px;
+}
+
+@cross-border: 1px solid black;
+
+.location1 {
+  text-align: end;
+  border-right: @cross-border;
+  border-bottom: @cross-border;
+}
+.location2 {
+  border-bottom: @cross-border;
+  border-left: @cross-border;
+}
+.location3 {
+  text-align: end;
+  border-top: @cross-border;
+  border-right: 1px solid black;
+}
+
+.location4 {
+  border-top: @cross-border;
+  border-left: @cross-border;
+}
+
+.locationShow {
+  width: 60px;
+  padding: 10px;
+}
+
+.checkContent {
+  margin-top: 20px;
+}
+
+.medicalAction {
+  display: flex;
+  margin: 10px 30px;
+}

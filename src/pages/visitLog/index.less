@@ -1,0 +1,35 @@
+.searchArea {
+  background-color: white;
+}
+
+.tableArea {
+  padding: 20px 10px;
+}
+
+.actionArea {
+  display: flex;
+  justify-content: flex-start;
+  padding: 20px 10px 0 30px;
+  button {
+    margin-right: 20px;
+  }
+}
+
+.container {
+  :global {
+    .ant-btn {
+      margin-right: 8px;
+      margin-bottom: 12px;
+    }
+    .ant-btn-group > .ant-btn {
+      margin-right: 0;
+    }
+  }
+}
+
+.identityId {
+  width: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

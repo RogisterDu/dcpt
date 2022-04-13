@@ -1,6 +1,6 @@
-# Ant Design Pro
+# 口腔门诊管理系统
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+基于Antd Pro +umi 脚手架开发
 
 ## Environment Prepare
 
