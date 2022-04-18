@@ -19,3 +19,24 @@ export async function editRecord(params: any) {
     data: params,
   });
 }
+
+export async function saveTemplateApi(params: any) {
+  return request('/api/templet/command/save', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function queryTemplateList() {
+  return request('/api/templet/query/list', {
+    method: 'GET',
+  });
+}
+
+export async function deleteSingleTemplate(params: any) {
+  return request('/api/templet/command/delete', {
+    method: 'GET',
+    params,
+  });
+}
+

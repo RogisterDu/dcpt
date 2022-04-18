@@ -13,6 +13,8 @@ import {
   Radio,
   Divider,
   message,
+  Spin,
+  Popconfirm,
 } from 'antd';
 import styles from '../../index.less';
 import '../../antdCover.less';
@@ -23,7 +25,13 @@ interface RecordCardProps {
   recordItem: any;
   handletoRefresh: () => void;
 }
-import { editRecord } from '@/services/record';
+import {
+  deleteSingleTemplate,
+  editRecord,
+  queryTemplateList,
+  saveTemplateApi,
+} from '@/services/record';
+// import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface infoInterface {
   main: string;
@@ -55,29 +63,44 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) 
   const { info, ...rest } = recordItem;
 
   const [editForm] = Form.useForm();
+  const [templateNameForm] = Form.useForm();
 
-  const mockTemplateData = [
-    {
-      id: 1,
-      title: '牙周炎',
-      main: '主诉',
-      now: '现病史',
-      cure: '治疗方案',
-      history: '既往史',
-      allergic: '过敏史',
-      epidemic: '传染病史',
-      advice: '医嘱',
-    },
-    {
-      id: 2,
-      title: '牙周炎',
-      main: '',
-    },
-  ];
+  // loading
+  const [templateLoading, setTemplateLoading] = useState(false);
+
+  // const mockTemplateData = [
+  //   {
+  //     id: 1,
+  //     title: '牙周炎',
+  //     main: '主诉',
+  //     now: '现病史',
+  //     cure: '治疗方案',
+  //     history: '既往史',
+  //     allergic: '过敏史',
+  //     epidemic: '传染病史',
+  //     advice: '医嘱',
+  //   },
+  //   {
+  //     id: 2,
+  //     title: '牙周炎',
+  //     main: '',
+  //   },
+  // ];
+
+  const getTemplateList = async () => {
+    setTemplateLoading(true);
+    await queryTemplateList()
+      .then((res: any) => {
+        setTemaplateData(res.data || []);
+      })
+      .finally(() => {
+        setTemplateLoading(false);
+      });
+  };
 
   useEffect(() => {
     if (editVisable) {
-      setTemaplateData(mockTemplateData);
+      getTemplateList();
     }
   }, [editVisable]);
 
@@ -234,15 +257,62 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) 
   };
 
   const saveAsTemplate = () => {
-    console.log('saveAsTemplate');
+    // console.log('saveAsTemplate');
     //getEditFromALlValues
-    const FormValues = editForm.getFieldsValue();
-    console.log('FormValues', FormValues);
+    // const FormValues = editForm.getFieldsValue();
+    // console.log('FormValues', FormValues);
+    // 检查每项是否为空
+    templateNameForm.resetFields();
+    Modal.confirm({
+      title: '请输入病例模板名称',
+      mask: true,
+      style: { marginTop: '200px' },
+      content: (
+        //antd V4
+        <Form name="form_in_modal" form={templateNameForm}>
+          <Form.Item
+            name="templateName"
+            label="模板名称"
+            rules={[{ required: true, message: '请输入模板名称' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      ),
+      onOk() {
+        templateNameForm.validateFields().then((values) => {
+          const { templateName } = values;
+          const FormValues = editForm.getFieldsValue();
+          console.log('FormValues', FormValues, templateName);
+          saveTemplateApi({ ...FormValues, name: templateName }).then((res: any) => {
+            if (res.code) {
+              message.success('保存成功');
+              getTemplateList();
+            } else {
+              message.error(res?.message || '保存失败');
+              return new Promise((_resolve, reject) => {
+                reject();
+              });
+            }
+          });
+        });
+      },
+    });
   };
 
   const renderCardExtra = (id: any) => {
     console.log('id', id);
     return <a onClick={() => toEdit()}>编辑</a>;
+  };
+
+  const toDeleteTemplate = (id: any) => {
+    console.log('id', id);
+    deleteSingleTemplate({ id }).then((res: any) => {
+      if (res.code) {
+        message.success('删除成功');
+      }
+      getTemplateList();
+    });
   };
 
   return (
@@ -275,48 +345,64 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) 
         <div className={styles.editModalArea}>
           <div className={styles.leftArea}>
             <div className={styles.templateListArea}>
-              <ProList<templateInterface>
-                className={styles.templateList}
-                bordered={true}
-                split={true}
-                dataSource={temaplateData || []}
-                rowKey="id"
-                headerTitle="病例模板"
-                expandable={{ expandedRowKeys, onExpandedRowsChange: setExpandedRowKeys }}
-                metas={{
-                  title: {},
-                  actions: {
-                    render: (_, record: any) => {
-                      return (
-                        <div className={styles.action}>
-                          <a onClick={() => toFillWithTemplate(record)}>导入</a>
-                          <Divider type="vertical" />
-                          <a>删除</a>
-                        </div>
-                      );
-                    },
-                  },
-                  description: {
-                    render: (_, value: any) => {
-                      const { main, now, cure, history, allergic, advice } = value;
-                      return (
-                        <>
-                          <div className={styles.templateDesc}>
-                            {/* <span className={styles.templateText}>病例号:{id || '-'}</span> */}
-                            <span className={styles.templateText}>主诉:{main || '-'}</span>
-                            <span className={styles.templateText}>现病史:{now || '-'}</span>
-                            <span className={styles.templateText}>既往史:{history || '-'}</span>
-                            <span className={styles.templateText}>过敏史:{allergic || '-'}</span>
-                            {/* <div>检查:</div> */}
-                            <span className={styles.templateText}>治疗方案:{cure || '-'}</span>
-                            <span className={styles.templateText}>医嘱:{advice || '-'}</span>
+              <Spin spinning={templateLoading}>
+                {/* <InfiniteScroll
+                  next={() => {}}
+                  hasMore={false}
+                  dataLength={temaplateData.length}
+                  loader={<></>}
+                > */}
+                <ProList<templateInterface>
+                  className={styles.templateList}
+                  bordered={true}
+                  split={true}
+                  dataSource={temaplateData || []}
+                  rowKey="id"
+                  headerTitle="病例模板"
+                  expandable={{ expandedRowKeys, onExpandedRowsChange: setExpandedRowKeys }}
+                  metas={{
+                    title: {},
+                    actions: {
+                      render: (_, record: any) => {
+                        return (
+                          <div className={styles.action}>
+                            <a onClick={() => toFillWithTemplate(record)}>导入</a>
+                            <Divider type="vertical" />
+                            {/* <Popconfirm
+                              title="Are you sure to delete this task?"
+                              onConfirm={() => toDeleteTemplate(record.id)}
+                              okText="Yes"
+                              cancelText="No"
+                            > */}
+                            <a onClick={() => toDeleteTemplate(record.id)}>删除</a>
+                            {/* </Popconfirm> */}
                           </div>
-                        </>
-                      );
+                        );
+                      },
                     },
-                  },
-                }}
-              />
+                    description: {
+                      render: (_, value: any) => {
+                        const { main, now, cure, history, allergic, advice } = value;
+                        return (
+                          <>
+                            <div className={styles.templateDesc}>
+                              {/* <span className={styles.templateText}>病例号:{id || '-'}</span> */}
+                              <span className={styles.templateText}>主诉:{main || '-'}</span>
+                              <span className={styles.templateText}>现病史:{now || '-'}</span>
+                              <span className={styles.templateText}>既往史:{history || '-'}</span>
+                              <span className={styles.templateText}>过敏史:{allergic || '-'}</span>
+                              {/* <div>检查:</div> */}
+                              <span className={styles.templateText}>治疗方案:{cure || '-'}</span>
+                              <span className={styles.templateText}>医嘱:{advice || '-'}</span>
+                            </div>
+                          </>
+                        );
+                      },
+                    },
+                  }}
+                />
+                {/* </InfiniteScroll> */}
+              </Spin>
             </div>
           </div>
           {/* <Divider type="vertical" style={{ height: '100%' }} /> */}

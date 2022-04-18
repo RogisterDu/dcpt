@@ -77,6 +77,9 @@ export default [
         path: '/center/accountsettings',
         component: './AccountSettings',
       },
+      {
+        component: './404',
+      },
     ],
   },
   {
