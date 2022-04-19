@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PatientList from './components/PatientList';
-import { Tabs } from 'antd';
+import { Empty, Tabs } from 'antd';
 import styles from './index.less';
 import Info from './Info';
 import MedicalRecord from '@/pages/MedicalRecord';
@@ -32,7 +32,11 @@ const PatientManage: React.FC = () => {
 
   //空白页面渲染
   const renderBlank = () => {
-    return <div className={styles.blank}>暂无数据</div>;
+    return (
+      <div className={styles.blank}>
+        <Empty description="请在左侧选择病人" />
+      </div>
+    );
   };
 
   //Tabs渲染
