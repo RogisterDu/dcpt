@@ -13,3 +13,11 @@ export async function invaildVisitLog(params: any) {
     data: params,
   });
 }
+
+export async function exportVisitLog(params: any) {
+  return request('/api/visitor/command/export', {
+    method: 'POST',
+    data: params,
+  });
+}
+

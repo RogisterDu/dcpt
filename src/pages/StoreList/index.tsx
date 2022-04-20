@@ -7,6 +7,7 @@ import styles from './index.less';
 
 const StoreList: React.FC = () => {
   const [values, setFormValues] = useState<any>({});
+  const refreshData = 0;
   const resetForm = (item?: any) => {
     console.log(item);
     setFormValues({});
@@ -23,6 +24,7 @@ const StoreList: React.FC = () => {
         searchFormConfig={searchFormConfig}
         resetForm={resetForm}
         searchForm={searchForm}
+        formrefresh={refreshData}
       />
       <div className={styles.categoryContent}>
         <div className={styles.categoryBlock}>

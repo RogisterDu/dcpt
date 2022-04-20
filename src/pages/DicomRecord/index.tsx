@@ -1,13 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Modal } from 'antd';
+import { Button, Image, List, Modal } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import request from '@/utils/request';
 import styles from './index.less';
+import { queryDicomList } from '@/services/dicom';
 
 type GithubIssueItem = {
-  url: string;
   id: number;
   number: number;
   title: string;
@@ -16,15 +15,24 @@ type GithubIssueItem = {
     color: string;
   }[];
   state: string;
-  comments: number;
-  created_at: string;
-  updated_at: string;
-  closed_at?: string;
+  time: string;
+  url: any;
 };
 
-const DicomRecord: React.FC = () => {
+interface DicomRecordProps {
+  patientId: string | number;
+}
+
+const DicomRecord: React.FC<DicomRecordProps> = ({ patientId }) => {
   const actionRef = useRef<ActionType>();
   const [showDicomModal, setShowDicomModal] = React.useState(false);
+  const [dicomData, setDicomData] = useState<any>([]);
+
+  const toViewDicom = (record: GithubIssueItem) => {
+    console.log('查看dicom', record);
+    setShowDicomModal(true);
+    setDicomData(record.url);
+  };
 
   const columns: ProColumns<GithubIssueItem>[] = [
     {
@@ -34,12 +42,13 @@ const DicomRecord: React.FC = () => {
     },
     {
       title: '编号',
-      dataIndex: 'title',
+      dataIndex: 'id',
+      hideInSearch: true,
     },
     {
       title: '拍摄时间',
       key: 'showTime',
-      dataIndex: 'created_at',
+      dataIndex: 'time',
       valueType: 'dateTime',
       sorter: true,
       hideInSearch: true,
@@ -48,8 +57,8 @@ const DicomRecord: React.FC = () => {
       title: '操作',
       valueType: 'option',
       key: 'option',
-      render: () => [
-        <a key="view" onClick={() => setShowDicomModal(true)}>
+      render: (_text, record) => [
+        <a key="view" onClick={() => toViewDicom(record)}>
           查看
         </a>,
       ],
@@ -58,7 +67,32 @@ const DicomRecord: React.FC = () => {
 
   return (
     <>
-      <Modal visible={showDicomModal}></Modal>
+      <Modal
+        visible={showDicomModal}
+        title="医学影像"
+        width={1000}
+        onCancel={() => setShowDicomModal(false)}
+        footer={<Button onClick={() => setShowDicomModal(false)}>关闭</Button>}
+        destroyOnClose
+      >
+        <div className={styles.dicomArea}>
+          <List
+            itemLayout="horizontal"
+            grid={{ gutter: 8, column: 4 }}
+            dataSource={dicomData}
+            renderItem={(item: any) => (
+              <List.Item key={item}>
+                <Image
+                  src={item}
+                  key={item}
+                  width={200}
+                  placeholder={<Image preview={false} src={item} width={1600} key={item} />}
+                />
+              </List.Item>
+            )}
+          />
+        </div>
+      </Modal>
       <div className={styles.tableArea}>
         医学影像
         <ProTable<GithubIssueItem>
@@ -66,12 +100,17 @@ const DicomRecord: React.FC = () => {
           actionRef={actionRef}
           cardBordered
           request={async (params = {}, sort, filter) => {
-            console.log(sort, filter);
-            return request<{
-              data: GithubIssueItem[];
-            }>('https://proapi.azurewebsites.net/github/issues', {
-              params,
+            console.log(sort, filter, params);
+            const res = await queryDicomList({
+              pageNo: params.current,
+              pageSize: params.pageSize,
+              patient_id: patientId,
             });
+            return {
+              data: res?.data?.data || [],
+              success: true,
+              total: res.data.total,
+            };
           }}
           editable={{
             type: 'multiple',

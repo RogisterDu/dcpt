@@ -34,13 +34,33 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
   const renderCircle = (status: number) => {
     switch (status) {
       case 100:
-        return <div className="table-circle color-ing" />;
+        return (
+          <>
+            <div className="table-circle color-ing" />
+            准备中
+          </>
+        );
       case 200:
-        return <div className="table-circle color-ready" />;
+        return (
+          <>
+            <div className="table-circle color-ready" />
+            待下载
+          </>
+        );
       case 300:
-        return <div className="table-circle color-done" />;
+        return (
+          <>
+            <div className="table-circle color-done" />
+            已下载
+          </>
+        );
       case 900:
-        return <div className="table-circle color-fail" />;
+        return (
+          <>
+            <div className="table-circle color-fail" />
+            导出失败
+          </>
+        );
       default:
         return null;
     }
@@ -64,7 +84,7 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
       finishTimeQueryEnd,
     };
     queryTaskList(params).then((res) => {
-      setTableData(res?.data?.dataList || []);
+      setTableData(res?.data?.data || []);
       setTotal(res?.data?.total || 0);
       setLoading(false);
     });
@@ -72,7 +92,7 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
 
   const handleToDownload = (record: recordInterface) => {
     console.log('download', record);
-    // window.open(record.fileUrl);
+    window.open(record.fileUrl);
     // downloadByUrl(record.fileUrl, '');
     if (record.taskStatus) {
       // console.log('updateTaskStatus', record);
@@ -99,7 +119,7 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
     itemRenderType: columnsItem,
   ) => {
     const { value, record } = recordInfo;
-    const { taskStatus, taskStatusName } = record;
+    const { taskStatus } = record;
     switch (itemRenderType.renderType) {
       case 'plainText':
         return value || '-';
@@ -108,10 +128,7 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
       case 'statusRender':
         return (
           <>
-            <div className="table-status">
-              {renderCircle(taskStatus)}
-              <div className="table-statustitle">{taskStatusName}</div>
-            </div>
+            <div className="table-status">{renderCircle(taskStatus)}</div>
           </>
         );
       case 'action':

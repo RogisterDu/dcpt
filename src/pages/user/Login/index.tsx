@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Divider, Form, Input } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import './index.less';
 import { login } from './services';
 import { getToken, setToken } from '@/utils/token';

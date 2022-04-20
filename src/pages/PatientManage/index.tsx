@@ -60,7 +60,7 @@ const PatientManage: React.FC = () => {
           {patientId && <ChargeRecord patientId={patientId} />}
         </TabPane>
         <TabPane tab="医学影像" key="4">
-          {patientId && <DicomRecord />}
+          {patientId && <DicomRecord patientId={patientId} />}
         </TabPane>
       </Tabs>
       // </Spin>

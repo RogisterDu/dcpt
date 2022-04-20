@@ -7,7 +7,7 @@ import TableList from '@/pages/components/TableList';
 import { visitSearchConfig, visitTableColumns, visitLogFormItems } from './data';
 import { Button, Divider, message, Tooltip } from 'antd';
 import AddModal from './components/AddModal';
-import { addNewVisitLog, invaildVisitLog } from '@/services/visit';
+import { addNewVisitLog, exportVisitLog, invaildVisitLog } from '@/services/visit';
 import moment from 'moment';
 
 const VisitLog: React.FC = () => {
@@ -108,6 +108,11 @@ const VisitLog: React.FC = () => {
 
   const handletoExport = () => {
     console.log(selected);
+    exportVisitLog({}).then((res) => {
+      if (res.code) {
+        message.success('已添加到导出队列');
+      }
+    });
   };
 
   return (
