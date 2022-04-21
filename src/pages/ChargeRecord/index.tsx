@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, message, Timeline } from 'antd';
+import { Button, message, Spin, Timeline } from 'antd';
 // import RecordCard from './components/RecordCard';
 import ChargeCard from './components/ChargeCard';
 import styles from './index.less';
 import './antdCover.less';
 import { addEmptyCharge, queryFeeList } from '@/services/fee';
+import { AppstoreAddOutlined } from '@ant-design/icons';
 
 interface chargeRecordProps {
   patientId: any;
@@ -12,12 +13,18 @@ interface chargeRecordProps {
 
 const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId }) => {
   const [record, setRecord] = useState<any>([]);
+  const [queryLoading, setQueryLoading] = useState(false);
 
   const getFeeList = async () => {
-    queryFeeList({ patientId }).then((res: any) => {
-      console.log('res', res.data);
-      setRecord([...res.data]);
-    });
+    setQueryLoading(true);
+    queryFeeList({ patientId })
+      .then((res: any) => {
+        console.log('res', res.data);
+        setRecord([...res.data]);
+      })
+      .finally(() => {
+        setQueryLoading(false);
+      });
   };
   useEffect(() => {
     if (patientId) {
@@ -120,16 +127,20 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId }) => {
 
   return (
     <>
-      <div>
-        <Button onClick={toAddNewCharge}>新增收费</Button>
+      <div style={{ marginLeft: '40px' }}>
+        <Button onClick={toAddNewCharge} type="primary" icon={<AppstoreAddOutlined />} size="large">
+          新增收费
+        </Button>
       </div>
-      <div className={styles.medicalArea}>
-        <Timeline mode="left">
-          {record.map((chargeItem: any) => {
-            return renderTimeLines(chargeItem);
-          }) || null}
-        </Timeline>
-      </div>
+      <Spin spinning={queryLoading}>
+        <div className={styles.medicalArea}>
+          <Timeline mode="left">
+            {record.map((chargeItem: any) => {
+              return renderTimeLines(chargeItem);
+            }) || null}
+          </Timeline>
+        </div>
+      </Spin>
     </>
   );
 };

@@ -1,35 +1,27 @@
 export const searchFormConfig = [
-  {
-    label: '任务名：',
-    name: 'taskType',
-    itemType: 'select',
-    itemProps: {
-      // showSearch: true,
-      placeholder: '请选择任务名',
-      options: [
-        {
-          label: '订单导出',
-          value: '100',
-        },
-        {
-          label: '客户导出',
-          value: '200',
-        },
-        {
-          label: '标签导出',
-          value: '210',
-        },
-        // {
-        //   label: '产品导出',
-        //   value: '300',
-        // },
-        {
-          label: '账号导出',
-          value: '400',
-        },
-      ],
-    },
-  },
+  // {
+  //   label: '任务名：',
+  //   name: 'taskType',
+  //   itemType: 'select',
+  //   itemProps: {
+  //     // showSearch: true,
+  //     placeholder: '请选择任务名',
+  //     options: [
+  //       {
+  //         label: '订单导出',
+  //         value: '100',
+  //       },
+  //       // {
+  //       //   label: '产品导出',
+  //       //   value: '300',
+  //       // },
+  //       {
+  //         label: '账号导出',
+  //         value: '400',
+  //       },
+  //     ],
+  //   },
+  // },
   {
     label: '完成时间：',
     name: 'finished',
@@ -47,19 +39,19 @@ export const searchFormConfig = [
       placeholder: '请选择状态',
       options: [
         {
-          value: '100',
+          value: 100,
           label: '准备中',
         },
         {
-          value: '200',
+          value: 200,
           label: '待下载',
         },
         {
-          value: '300',
+          value: 300,
           label: '已下载',
         },
         {
-          value: '900',
+          value: 900,
           label: '导出失败',
         },
       ],

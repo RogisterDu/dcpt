@@ -20,3 +20,10 @@ export async function queryFuzzyPatient(params: any) {
     params,
   });
 }
+
+export async function addNewPatient(params: any) {
+  return request('/api/patient/command/add', {
+    method: 'POST',
+    data: params,
+  });
+}

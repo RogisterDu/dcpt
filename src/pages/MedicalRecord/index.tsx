@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, message, Timeline } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, message, Spin, Timeline } from 'antd';
 import RecordCard from './components/RecordCard';
 import styles from './index.less';
 import './antdCover.less';
@@ -11,15 +11,21 @@ interface MedicalRecordProps {
 }
 
 const MedicalRecord: React.FC<MedicalRecordProps> = ({ patientId }) => {
-  const [recordList, setRecordList] = React.useState([]);
+  const [recordList, setRecordList] = useState([]);
+  const [queryLoading, setQueryLoading] = useState(false);
   // const handletoEdit = (id: any) => {
   //   console.log('id', id);
   // };
 
   const getRecordList = () => {
-    queryRecordList({ patientId }).then((res) => {
-      setRecordList(res.data || []);
-    });
+    setQueryLoading(true);
+    queryRecordList({ patientId })
+      .then((res) => {
+        setRecordList(res.data || []);
+      })
+      .finally(() => {
+        setQueryLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -96,14 +102,16 @@ const MedicalRecord: React.FC<MedicalRecordProps> = ({ patientId }) => {
         </Button>
       </div>
       <div className={styles.medicalArea}>
-        <Timeline mode="left">
-          {/* {medicalRecord?.map((recordItem: any) => {
+        <Spin spinning={queryLoading}>
+          <Timeline mode="left">
+            {/* {medicalRecord?.map((recordItem: any) => {
          renderTimeLines(recordItem);
        }) || null} */}
-          {recordList.map((recordItem: any) => {
-            return renderTimeLines(recordItem);
-          }) || null}
-        </Timeline>
+            {recordList.map((recordItem: any) => {
+              return renderTimeLines(recordItem);
+            }) || null}
+          </Timeline>
+        </Spin>
       </div>
     </>
   );

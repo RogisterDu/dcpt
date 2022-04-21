@@ -9,6 +9,7 @@ import { Button, Divider, message, Tooltip } from 'antd';
 import AddModal from './components/AddModal';
 import { addNewVisitLog, exportVisitLog, invaildVisitLog } from '@/services/visit';
 import moment from 'moment';
+import { addNewPatient } from '@/services/patient';
 
 const VisitLog: React.FC = () => {
   const [values, setValues] = useState({});
@@ -38,7 +39,9 @@ const VisitLog: React.FC = () => {
     setValues({ ...rest });
   };
 
-  const toReset = () => {};
+  const toReset = () => {
+    setValues({});
+  };
 
   const changeSelect = (selectedKeys: any[]) => {
     if (selectedKeys.length > 0) {
@@ -49,6 +52,20 @@ const VisitLog: React.FC = () => {
 
   const toSeeDoctor = (record: any) => {
     console.log('查看医生', record);
+    const params = {
+      name: record.name,
+      identity_id: record.identityID,
+      sex: record.sex || 0,
+      contact: record.contact,
+      PCR: record.pcr,
+      address: record.address,
+    };
+    addNewPatient(params).then((res: any) => {
+      if (res.code) {
+        message.success(res.message || '添加成功');
+        console.log(res?.data?.id || 0);
+      }
+    });
   };
 
   const toInvalid = (id: any) => {

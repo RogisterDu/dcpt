@@ -1,3 +1,4 @@
+import { StarOutlined, BarChartOutlined, SolutionOutlined, ScheduleOutlined } from '@ant-design/icons';
 export default [
   {
     path: '/',
@@ -34,15 +35,9 @@ export default [
       {
         path: '/center/home',
         name: '首页',
-        icon: 'smile',
+        icon: 'BarChartOutlined',
         component: './DashboardAnalysis',
       },
-      // {
-      //   path: '/center/home',
-      //   name: '首页',
-      //   icon: 'smile',
-      //   component: './Home',
-      // },
       {
         path: '/center/visitLog',
         name: '来访日志',
@@ -52,7 +47,7 @@ export default [
       {
         path: '/center/patient',
         name: '病人列表',
-        icon: 'smile',
+        icon: 'ScheduleOutlined',
         component: './PatientManage', // routes: [{
         //   path: '/center/patientInfo',
         //   name: '病人信息',
