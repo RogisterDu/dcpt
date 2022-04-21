@@ -27,3 +27,11 @@ export async function addNewPatient(params: any) {
     data: params,
   });
 }
+
+export async function editPatientInfo(params: any) {
+  return request('/api/patient/command/edit', {
+    method: 'POST',
+    data: params,
+  });
+}
+

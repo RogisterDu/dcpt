@@ -20,3 +20,9 @@ export async function editAccount(params: any) {
     data: params,
   });
 }
+
+export async function getAccess() {
+  return request('/api/account/access', {
+    method: 'GET',
+  });
+}

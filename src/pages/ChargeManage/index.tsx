@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
 import {
   Button,
@@ -17,6 +17,8 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { queryChargeManage, addNewCharge, editCharge } from '@/services/charge';
 import './antdCover.less';
+import { getAccess } from '@/services/account';
+import { history } from 'umi';
 // import getCNChar from '@/utils/cnHelper';
 // import cnchar from 'cnchar-all';
 
@@ -39,6 +41,15 @@ const ChargeManage: React.FC = () => {
     id: number;
     chargeItem: string;
   };
+
+  useEffect(() => {
+    getAccess().then((res) => {
+      if (!res.access) {
+        message.error('您没有权限访问该页面');
+        history.push('/');
+      }
+    });
+  }, []);
 
   const toEditChargeItem = (item: GithubIssueItem) => {
     console.log('编辑页面', item);

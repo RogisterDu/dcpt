@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { Button, Menu, Dropdown, Form, Modal, Input, Switch, Badge, message } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { queryAccoutManage, addNewAccount, editAccount } from '@/services/account';
+import { queryAccoutManage, addNewAccount, editAccount, getAccess } from '@/services/account';
 import './antdCover.less';
+import { history } from 'umi';
 // import getCNChar from '@/utils/cnHelper';
 // import cnchar from 'cnchar-all';
 
@@ -27,6 +28,15 @@ const AccountManage: React.FC = () => {
     phone: string;
     account: string;
   };
+
+  useEffect(() => {
+    getAccess().then((res) => {
+      if (!res.access) {
+        message.error('您没有权限访问该页面');
+        history.push('/');
+      }
+    });
+  }, []);
 
   const toEditAccountItem = (item: GithubIssueItem) => {
     console.log('编辑页面', item);

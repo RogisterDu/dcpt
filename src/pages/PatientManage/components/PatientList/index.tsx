@@ -6,8 +6,9 @@ import { queryPatientList } from '@/services/patient';
 import Meta from 'antd/lib/card/Meta';
 interface Pprops {
   handleId: any;
+  refresh: any;
 }
-const PatientList: React.FC<Pprops> = ({ handleId }) => {
+const PatientList: React.FC<Pprops> = ({ handleId, refresh }) => {
   // const fakeDataUrl =
   //   'https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo';
   const ContainerHeight = 900;
@@ -50,6 +51,12 @@ const PatientList: React.FC<Pprops> = ({ handleId }) => {
       </span>
     );
   };
+
+  useEffect(() => {
+    if (refresh !== 0) {
+      appendData(false);
+    }
+  }, [refresh]);
 
   useEffect(() => {
     appendData(false);

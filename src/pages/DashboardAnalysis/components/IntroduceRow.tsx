@@ -77,7 +77,7 @@ const IntroduceRow = ({ loading, visitData = [] }: { loading: boolean; visitData
       <ChartCard
         bordered={false}
         loading={loading}
-        title="今日初诊"
+        title="今日初诊/复诊"
         action={
           <Tooltip title="指标说明">
             <InfoCircleOutlined />
@@ -92,46 +92,19 @@ const IntroduceRow = ({ loading, visitData = [] }: { loading: boolean; visitData
     </Col>
     <Col {...topColResponsiveProps}>
       <ChartCard
-        loading={loading}
         bordered={false}
-        title="运营活动效果"
+        loading={loading}
+        title="今日预约"
         action={
           <Tooltip title="指标说明">
             <InfoCircleOutlined />
           </Tooltip>
         }
-        total="78%"
-        footer={
-          <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-            <Trend flag="up" style={{ marginRight: 16 }}>
-              周同比
-              <span className={styles.trendText}>12%</span>
-            </Trend>
-            <Trend flag="down">
-              日同比
-              <span className={styles.trendText}>11%</span>
-            </Trend>
-          </div>
-        }
+        total={numeral(6560).format('0,0')}
+        footer={<Field label="转化率" value="60%" />}
         contentHeight={46}
       >
-        <Progress
-          height={46}
-          padding={[15, 0]}
-          percent={0.78}
-          color="#13C2C2"
-          autoFit
-          annotations={[
-            {
-              type: 'line',
-              start: ['80%', '0%'],
-              end: ['80%', '100%'],
-              style: {
-                stroke: '#13C2C2',
-              },
-            },
-          ]}
-        />
+        <TinyColumn height={46} autoFit data={visitData.map((item) => item.y)} />
       </ChartCard>
     </Col>
   </Row>

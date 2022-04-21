@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import FormDetail from '@/pages/components/FormDetail';
-import { Avatar, Rate } from 'antd';
+import { Avatar, Rate, Tag } from 'antd';
 import styles from '../index.less';
 import { queryPatientDetails } from '@/services/patient';
 
 interface Iprops {
   patientId: any;
+  handleToEdit: any;
 }
-const Info: React.FC<Iprops> = ({ patientId }) => {
+const Info: React.FC<Iprops> = ({ patientId, handleToEdit }) => {
   const [patientInfo, setPatientInfo] = useState<any>({});
 
   useEffect(() => {
@@ -61,11 +62,6 @@ const Info: React.FC<Iprops> = ({ patientId }) => {
           defaultValue: patientInfo?.visitLast || '-',
           key: 'visitLast',
         },
-        {
-          label: '创建者',
-          defaultValue: patientInfo?.creator || '-',
-          key: 'creator',
-        },
       ],
     },
     {
@@ -106,17 +102,33 @@ const Info: React.FC<Iprops> = ({ patientId }) => {
       ],
     },
   ];
+
+  const toEditInfo = () => {
+    handleToEdit(patientInfo);
+  };
   return (
     <>
       <div className={styles.avatarArea}>
-        <Avatar size={128} />
+        <Avatar size={128} src={patientInfo?.Avatar || 'https://joeschmoe.io/api/v1/random'} />
         <div className={styles.patientrate}>
           <div className={styles.rateArea}>
             <span>客户星级 ： </span>
             <Rate disabled defaultValue={patientInfo?.rate || 0} />
           </div>
           <div className={styles.rateArea}>
-            <span>客户标签 ： </span>
+            <span>
+              客户标签 ：
+              {patientInfo?.tags?.map((tag: any) => {
+                return (
+                  <Tag color="#55acee" key={tag}>
+                    {tag}
+                  </Tag>
+                );
+              }) || null}
+            </span>
+          </div>
+          <div className={styles.rateArea}>
+            <a onClick={toEditInfo}>修改信息</a>
           </div>
         </div>
       </div>

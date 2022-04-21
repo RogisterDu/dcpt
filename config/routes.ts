@@ -1,4 +1,4 @@
-import { StarOutlined, BarChartOutlined, SolutionOutlined, ScheduleOutlined } from '@ant-design/icons';
+import { StarOutlined, BarChartOutlined, SolutionOutlined, ScheduleOutlined, ClockCircleOutlined, SnippetsOutlined, SettingOutlined } from '@ant-design/icons';
 export default [
   {
     path: '/',
@@ -57,18 +57,18 @@ export default [
       {
         path: '/center/reservation',
         name: '预约管理',
-        icon: 'smile',
+        icon: 'ClockCircleOutlined',
         component: './Reservation',
       },
       {
         path: '/center/exportTask',
         name: '导出任务',
-        icon: 'smile',
+        icon: 'SnippetsOutlined',
         component: './StoreList',
       },
       {
         name: '个人设置',
-        icon: 'smile',
+        icon: 'SettingOutlined',
         path: '/center/accountsettings',
         component: './AccountSettings',
       },

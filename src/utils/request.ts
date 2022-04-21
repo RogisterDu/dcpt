@@ -1,4 +1,5 @@
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import { history } from 'umi';
 /*
  * @Author: your name
  * @Date: 2021-12-13 17:51:31
@@ -9,7 +10,7 @@ import { message } from 'antd';
  */
 /** Request 网络请求工具 更详细的 api 文档: https://github.com/umijs/umi-request */
 import { extend } from 'umi-request';
-import { getToken } from '@/utils/token';
+import { getToken, removeToken } from '@/utils/token';
 // import { notification } from 'antd';
 // import JsCookie from 'js-cookie';
 
@@ -45,10 +46,25 @@ const errorHandler = (error: { response: Response; data: any }): Response => {
     resData = typeof data === 'string' ? {} : data;
     if (status === 401) {
       message.error('登录状态失效，请重新登录');
+      Modal.warning({
+        title: '登录超时',
+        content: '登录已超时，请重新登录。',
+        okText: '知道了',
+        wrapClassName: 'to-login-modal',
+        onOk() {
+          Modal.destroyAll();
+          removeToken();
+          const locationPath = window.location.pathname;
+          if (locationPath !== '/user/login') {
+            history.replace({
+              pathname: '/user/login',
+            });
+          }
+        },
+      });
       // if (!resData.errMsg) {
       // resData.errMsg = isEnglish ? 'Unauthorized' : 'Belum ada akses';
       // }
-      window.location.replace('/user/login');
     } else if (status === 403) {
       if (!resData.errMsg) {
         // resData.errMsg = isEnglish ? 'No permission, please contact administrator' : 'Tidak ada akses, silakan hubungi Administrator';
