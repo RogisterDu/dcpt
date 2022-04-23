@@ -14,7 +14,6 @@ import {
   Divider,
   message,
   Spin,
-  Popconfirm,
 } from 'antd';
 import styles from '../../index.less';
 import '../../antdCover.less';
@@ -131,8 +130,18 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) 
 
   //展示病例Card
   const rendertitle = () => {
-    const { time } = recordItem;
-    return <div className={styles.time}>{time}</div>;
+    const { time, has_info } = recordItem;
+    const StatusDesc = ['初诊', '复诊'][info.isFirst];
+    return (
+      <div className={styles.time}>
+        {time}&nbsp;&nbsp;&nbsp;
+        {has_info && (
+          <>
+            {StatusDesc} &nbsp;&nbsp;主治医师：{info.doctor}
+          </>
+        )}
+      </div>
+    );
   };
 
   const renderCheckDetail = (checkItem: any) => {
@@ -280,21 +289,27 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) 
         </Form>
       ),
       onOk() {
-        templateNameForm.validateFields().then((values) => {
-          const { templateName } = values;
-          const FormValues = editForm.getFieldsValue();
-          console.log('FormValues', FormValues, templateName);
-          saveTemplateApi({ ...FormValues, name: templateName }).then((res: any) => {
-            if (res.code) {
-              message.success('保存成功');
-              getTemplateList();
-            } else {
-              message.error(res?.message || '保存失败');
-              return new Promise((_resolve, reject) => {
-                reject();
+        return new Promise((resolve, reject) => {
+          templateNameForm
+            .validateFields()
+            .then((values) => {
+              const { templateName } = values;
+              const FormValues = editForm.getFieldsValue();
+              console.log('FormValues', FormValues, templateName);
+              saveTemplateApi({ ...FormValues, name: templateName }).then((res: any) => {
+                if (res.code) {
+                  message.success('保存成功');
+                  getTemplateList();
+                  resolve();
+                } else {
+                  message.error(res?.message || '保存失败');
+                  reject();
+                }
               });
-            }
-          });
+            })
+            .catch(() => {
+              reject();
+            });
         });
       },
     });
@@ -420,10 +435,14 @@ const RecordCard: React.FC<RecordCardProps> = ({ recordItem, handletoRefresh }) 
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item label="初诊/复诊" name="isFirst">
+                  <Form.Item
+                    label="初诊/复诊"
+                    name="isFirst"
+                    rules={[{ required: true, message: '请选择初诊/复诊' }]}
+                  >
                     <Radio.Group>
-                      <Radio value="0">初诊</Radio>
-                      <Radio value="1">复诊</Radio>
+                      <Radio value={0}>初诊</Radio>
+                      <Radio value={1}>复诊</Radio>
                     </Radio.Group>
                   </Form.Item>
                 </Col>

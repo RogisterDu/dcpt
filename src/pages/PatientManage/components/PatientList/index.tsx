@@ -42,11 +42,20 @@ const PatientList: React.FC<Pprops> = ({ handleId, refresh }) => {
       <span>
         <span>{item.name}</span>
         {item.tags.map((tag: any) => {
-          return (
-            <Tag color="#55acee" key={tag}>
-              {tag}
-            </Tag>
-          );
+          switch (tag) {
+            case '欠费':
+              return (
+                <Tag color="red" key={tag}>
+                  {tag}
+                </Tag>
+              );
+            default:
+              return (
+                <Tag color="#55acee" key={tag}>
+                  {tag}
+                </Tag>
+              );
+          }
         })}
       </span>
     );

@@ -85,7 +85,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
   const toShowCharge = () => {
     console.log('chargeItem', chargeItem);
     setChargeModal(true);
-
+    payForm.resetFields();
     //calculate each item total price
     const temp = chargeDetail.map((item: any) => {
       return {
@@ -352,6 +352,7 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
       dataIndex: 'quantity',
       renderFormItem: (item, { value, onChange }) => (
         <InputNumber
+          min={1}
           disabled={chargeItem.status !== 0 && chargeItem.status !== 1}
           value={value}
           onChange={onChange}
@@ -382,17 +383,21 @@ const ChargeCard: React.FC<ChargeCardProps> = ({ chargeItem, handletoRefresh }) 
         width={1400}
         centered
         visible={chargeModal}
-        footer={[
-          <Button key="back" onClick={() => setChargeModal(false)} loading={saveLoading}>
-            cancel
-          </Button>,
-          <Button key="saveTemplate" onClick={justToSave} loading={saveLoading}>
-            保存
-          </Button>,
-          <Button key="submit" type="primary" onClick={toCharge} loading={saveLoading}>
-            保存并收费
-          </Button>,
-        ]}
+        footer={
+          <>
+            <Button key="back" onClick={() => setChargeModal(false)} loading={saveLoading}>
+              cancel
+            </Button>
+            {chargeItem.status < 2 ? (
+              <Button key="saveTemplate" onClick={justToSave} loading={saveLoading}>
+                保存
+              </Button>
+            ) : null}
+            <Button key="submit" type="primary" onClick={toCharge} loading={saveLoading}>
+              保存并收费
+            </Button>
+          </>
+        }
         onCancel={() => setChargeModal(false)}
         title="收费详情"
       >

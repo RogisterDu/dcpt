@@ -9,9 +9,10 @@ import { AppstoreAddOutlined } from '@ant-design/icons';
 
 interface chargeRecordProps {
   patientId: any;
+  handleToFresh: any;
 }
 
-const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId }) => {
+const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId, handleToFresh }) => {
   const [record, setRecord] = useState<any>([]);
   const [queryLoading, setQueryLoading] = useState(false);
 
@@ -35,6 +36,7 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId }) => {
 
   const toRefresh = () => {
     getFeeList();
+    handleToFresh();
   };
 
   const toAddNewCharge = () => {
@@ -51,7 +53,7 @@ const ChargeRecord: React.FC<chargeRecordProps> = ({ patientId }) => {
   const renderTimeLines = (chargeItem: any) => {
     console.log('1111', chargeItem);
     return (
-      <Timeline.Item label={chargeItem.time} key={chargeItem.id}>
+      <Timeline.Item key={chargeItem.id}>
         <ChargeCard chargeItem={chargeItem} handletoRefresh={toRefresh} />
         {/* <RecordCard chargeItem={chargeItem} /> */}
       </Timeline.Item>

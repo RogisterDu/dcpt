@@ -48,7 +48,7 @@ const MedicalRecord: React.FC<MedicalRecordProps> = ({ patientId }) => {
   const renderTimeLines = (recordItem: any) => {
     // console.log('1111', recordItem);
     return (
-      <Timeline.Item label={recordItem.time}>
+      <Timeline.Item>
         <RecordCard recordItem={recordItem} handletoRefresh={getRecordList} />
       </Timeline.Item>
     );

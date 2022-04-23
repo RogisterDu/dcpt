@@ -44,7 +44,7 @@ const AccountManage: React.FC = () => {
     const { status, ...rest } = item;
     setItemModalVisible(true);
     accountForm.setFieldsValue({
-      status: status === 0 ? true : false,
+      status: status === 1 ? true : false,
       ...rest,
     });
   };
@@ -59,7 +59,7 @@ const AccountManage: React.FC = () => {
     accountForm.validateFields().then((values) => {
       console.log('values', values);
       const { status, ...rest } = values;
-      rest.status = status ? 0 : 1;
+      rest.status = status ? 1 : 0;
 
       if (accountForm.getFieldValue('id')) {
         rest.id = accountForm.getFieldValue('id');
@@ -124,8 +124,8 @@ const AccountManage: React.FC = () => {
       render: (_text, record) => {
         return (
           <Badge
-            status={record.status === 0 ? 'success' : 'error'}
-            text={record.status === 0 ? '启用' : '禁用'}
+            status={record.status === 1 ? 'success' : 'error'}
+            text={record.status === 1 ? '启用' : '禁用'}
           />
         );
       },

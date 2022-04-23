@@ -61,7 +61,7 @@ const ChargeManage: React.FC = () => {
       unitPrice,
       name: chargeItem,
       unit,
-      status: status === 0 ? true : false,
+      status: status === 1 ? true : false,
       type,
     });
   };
@@ -76,7 +76,7 @@ const ChargeManage: React.FC = () => {
     ChargeItemForm.validateFields().then((values) => {
       console.log('values', values);
       const { status, ...rest } = values;
-      rest.status = status ? 0 : 1;
+      rest.status = status ? 1 : 0;
 
       if (ChargeItemForm.getFieldValue('id')) {
         rest.id = ChargeItemForm.getFieldValue('id');
@@ -153,8 +153,8 @@ const ChargeManage: React.FC = () => {
       render: (_text, record) => {
         return (
           <Badge
-            status={record.status === 0 ? 'success' : 'error'}
-            text={record.status === 0 ? '启用' : '禁用'}
+            status={record.status === 1 ? 'success' : 'error'}
+            text={record.status === 1 ? '启用' : '禁用'}
           />
         );
       },
@@ -258,7 +258,12 @@ const ChargeManage: React.FC = () => {
               <Switch checkedChildren="启用" unCheckedChildren="禁用" defaultChecked />
             </Form.Item>
             <Form.Item label="单价" name="unitPrice" key="unitPrice">
-              <InputNumber placeholder="请输入单价" />
+              <InputNumber
+                placeholder="请输入单价"
+                step={0.1}
+                formatter={(value) => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                min={0}
+              />
             </Form.Item>
             <Form.Item
               label="单位"

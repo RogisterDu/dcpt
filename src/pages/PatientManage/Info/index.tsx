@@ -38,7 +38,7 @@ const Info: React.FC<Iprops> = ({ patientId, handleToEdit }) => {
           key: 'sex',
         },
         {
-          label: '出生年月',
+          label: '出生年月日',
           defaultValue: patientInfo?.birth || '-',
           key: 'birthday',
         },
@@ -59,7 +59,7 @@ const Info: React.FC<Iprops> = ({ patientId, handleToEdit }) => {
         },
         {
           label: '最近就诊时间',
-          defaultValue: patientInfo?.visitLast || '-',
+          defaultValue: patientInfo?.last_visit || '-',
           key: 'visitLast',
         },
       ],
@@ -70,7 +70,7 @@ const Info: React.FC<Iprops> = ({ patientId, handleToEdit }) => {
       children: [
         {
           label: '家庭住址',
-          defaultValue: `${patientInfo?.pcr?.join(' ') || '-'}  ${patientInfo?.address || '-'}`,
+          defaultValue: `${patientInfo?.PCR?.join(' ') || '-'}  ${patientInfo?.address || '-'}`,
           key: 'home',
         },
       ],
@@ -81,23 +81,18 @@ const Info: React.FC<Iprops> = ({ patientId, handleToEdit }) => {
       children: [
         {
           label: '既 往 史',
-          defaultValue: patientInfo?.pastHistory || '-',
+          defaultValue: patientInfo?.history || '-',
           key: 'pastHistory',
         },
         {
           label: '过 敏 史',
-          defaultValue: patientInfo?.allergyHistory || '-',
+          defaultValue: patientInfo?.allergic || '-',
           key: 'allergyHistory',
         },
         {
-          label: '流行病学史',
-          defaultValue: patientInfo?.histlogicalHistoryory || '-',
-          key: 'logicalHistory',
-        },
-        {
           label: '洁牙习惯',
-          defaultValue: patientInfo?.habits || '-',
-          key: 'habits',
+          defaultValue: patientInfo?.habit || '-',
+          key: 'habit',
         },
       ],
     },

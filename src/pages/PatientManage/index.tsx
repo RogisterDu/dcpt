@@ -80,6 +80,10 @@ const PatientManage: React.FC = () => {
     patientInfoForm.resetFields();
   };
 
+  const handleToFresh = () => {
+    setListrefresh(Date.now());
+  };
+
   const toSavePatient = () => {
     patientInfoForm.validateFields().then((values: any) => {
       console.log(values);
@@ -106,7 +110,7 @@ const PatientManage: React.FC = () => {
           if (res.code) {
             message.success(res.message || '添加成功');
             setPatientInfoVisable(false);
-            setListrefresh(Date.now());
+            handleToFresh();
           }
         })
         .finally(() => {
@@ -140,7 +144,7 @@ const PatientManage: React.FC = () => {
           {patientId && <MedicalRecord patientId={patientId} />}
         </TabPane>
         <TabPane tab="收费记录" key="3">
-          {patientId && <ChargeRecord patientId={patientId} />}
+          {patientId && <ChargeRecord patientId={patientId} handleToFresh={handleToFresh} />}
         </TabPane>
         <TabPane tab="医学影像" key="4">
           {patientId && <DicomRecord patientId={patientId} />}

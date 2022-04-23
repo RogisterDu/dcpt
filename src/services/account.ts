@@ -26,3 +26,16 @@ export async function getAccess() {
     method: 'GET',
   });
 }
+
+export async function getSelfAccountInfo() {
+  return request('/api/account/command/self/info', {
+    method: 'GET',
+  });
+}
+
+export async function editSelfAccount(params: any) {
+  return request('/api/account/command/self/edit', {
+    method: 'POST',
+    data: params,
+  });
+}

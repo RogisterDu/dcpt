@@ -54,7 +54,7 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
             已下载
           </>
         );
-      case 900:
+      case 400:
         return (
           <>
             <div className="table-circle color-fail" />
@@ -132,7 +132,7 @@ const TableList: React.FC<{ values: any }> = ({ values }) => {
           </>
         );
       case 'action':
-        return record.taskStatus !== 100 && record.taskStatus !== 900 ? (
+        return record.taskStatus !== 100 && record.taskStatus !== 400 ? (
           <>
             <a onClick={() => handleToDownload(record)}>下载</a>
           </>

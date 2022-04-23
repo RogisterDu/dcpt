@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Form, Input } from 'antd';
+import { Button, Divider, Form, Input, message } from 'antd';
 import './index.less';
 import { login } from './services';
 import { getToken, setToken } from '@/utils/token';
@@ -16,7 +16,10 @@ const Login: React.FC = () => {
     if (code) {
       setToken(token);
       window.location.href = '/';
+    } else {
+      message.error('登录失败');
     }
+    setLoading(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {

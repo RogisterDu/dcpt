@@ -12,6 +12,7 @@ const Settings: LayoutSettings & {
   fixSiderbar: true,
   pwa: false,
   logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  // logo: logo,
   headerHeight: 48,
   splitMenus: true,
 };
