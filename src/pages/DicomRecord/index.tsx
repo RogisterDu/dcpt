@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Image, List, Modal } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -33,6 +33,10 @@ const DicomRecord: React.FC<DicomRecordProps> = ({ patientId }) => {
     setShowDicomModal(true);
     setDicomData(record.url);
   };
+
+  useEffect(() => {
+    actionRef.current?.reload();
+  }, [patientId]);
 
   const columns: ProColumns<GithubIssueItem>[] = [
     {

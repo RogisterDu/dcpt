@@ -12,8 +12,8 @@ export default {
     '/api/': {
       // 要代理的地址
       // target: 'https://preview.pro.ant.design',
-      target: 'http://127.0.0.1:5000',F
-      // target: '/',
+      // target: 'http://127.0.0.1:5000',
+      target: '/',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },

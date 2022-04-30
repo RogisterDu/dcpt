@@ -34,7 +34,7 @@ const Info: React.FC<Iprops> = ({ patientId, handleToEdit }) => {
         },
         {
           label: '性别',
-          defaultValue: patientInfo?.sex || '-',
+          defaultValue: ['男', '女'][patientInfo?.sex] || '-',
           key: 'sex',
         },
         {
